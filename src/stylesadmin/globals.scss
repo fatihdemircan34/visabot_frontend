@@ -1,0 +1,20 @@
+  .table_controller {
+    justify-content: right;
+    display: flex;
+  }
+
+  .dropdown-menu {
+    font-size: unset !important;
+  }
+
+  .dropdown-item.active, .dropdown-item:active {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #f37294 !important;
+  }
+
+  .form-control {
+    height: unset !important;
+  }
+
+

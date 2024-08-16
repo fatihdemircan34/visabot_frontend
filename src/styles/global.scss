@@ -1,0 +1,446 @@
+
+  .container-loading {
+    font-family: "Oswald", sans-serif;
+    font-style: italic;
+    position: absolute;
+    transform: translate(-28%, -50%);
+    bottom: -15px;
+    left: 50%;
+  }
+
+  .glitch-login {
+    color: rgb(223, 191, 191);
+    position: relative;
+    font-size: 5vw;
+    animation: glitch 5s 5s infinite;
+  }
+
+  .glitch-login::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -2px;
+    text-shadow: -5px 0 magenta;
+    background: black;
+    overflow: hidden;
+    top: 0;
+    animation: noise-1 3s linear infinite alternate-reverse, glitch 5s 5.05s infinite;
+  }
+
+  .glitch-login::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px;
+    text-shadow: -5px 0 lightgreen;
+    background: black;
+    overflow: hidden;
+    top: 0;
+    animation: noise-2 3s linear infinite alternate-reverse, glitch-login 5s 5s infinite;
+  }
+
+  @keyframes glitch-login {
+    1% {
+      transform: rotateX(10deg) skewX(90deg);
+    }
+
+    2% {
+      transform: rotateX(0deg) skewX(0deg);
+    }
+  }
+
+  @keyframes noise-1 {
+    $steps: 30;
+
+    @for $i from 1 through $steps {
+      #{percentage($i*(1/$steps))} {
+        $top: random(100);
+        $bottom: random(101 - $top);
+        clip-path: inset(#{$top}px 0 #{$bottom}px 0);
+      }
+    }
+  }
+
+  @keyframes noise-2 {
+    $steps: 30;
+
+    @for $i from 0 through $steps {
+      #{percentage($i*(1/$steps))} {
+        $top: random(100);
+        $bottom: random(101 - $top);
+        clip-path: inset(#{$top}px 0 #{$bottom}px 0);
+      }
+    }
+  }
+
+  .scanlines {
+    overflow: hidden;
+    mix-blend-mode: difference;
+  }
+
+  .scanlines::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    background: repeating-linear-gradient(to bottom,
+            transparent 0%,
+            rgba(255, 255, 255, 0.05) .5%,
+            transparent 1%);
+
+    animation: fudge 7s ease-in-out alternate infinite;
+  }
+
+
+  @keyframes fudge {
+    from {
+      transform: translate(0px, 0px);
+    }
+
+    to {
+      transform: translate(0px, 2%);
+    }
+  }
+
+  .glow {
+    @extend .glitch-login;
+    text-shadow: 0 0 1000px rgb(223, 191, 191);
+    color: transparent;
+    position: absolute;
+    top: 0;
+  }
+
+  .subtitle {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 100;
+    font-size: .8vw;
+    color: rgba(165, 141, 141, .4);
+    text-transform: uppercase;
+    letter-spacing: 1em;
+    text-align: center;
+    position: absolute;
+    left: 17%;
+    animation: glitch-2 5s 5.02s infinite;
+  }
+
+  @keyframes glitch-2 {
+    1% {
+      transform: rotateX(10deg) skewX(70deg);
+    }
+
+    2% {
+      transform: rotateX(0deg) skewX(0deg);
+    }
+  }
+
+
+  @keyframes firework {
+    0% {
+      transform: translate(-50%, 60vh);
+      width: 0.5vmin;
+      opacity: 1;
+    }
+
+    50% {
+      width: 0.5vmin;
+      opacity: 1;
+    }
+
+    100% {
+      width: 45vmin;
+      opacity: 0;
+    }
+  }
+
+  .firework,
+  .firework::before,
+  .firework::after {
+    --top: 60vh;
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.5vmin;
+    aspect-ratio: 1;
+    background: /* random backgrounds */
+            radial-gradient(circle, #ff0 0.2vmin, #0000 0) 50% 00%,
+            radial-gradient(circle, #ff0 0.3vmin, #0000 0) 00% 50%,
+            radial-gradient(circle, #ff0 0.5vmin, #0000 0) 50% 99%,
+            radial-gradient(circle, #ff0 0.2vmin, #0000 0) 99% 50%,
+            radial-gradient(circle, #ff0 0.3vmin, #0000 0) 80% 90%,
+            radial-gradient(circle, #ff0 0.5vmin, #0000 0) 95% 90%,
+            radial-gradient(circle, #ff0 0.5vmin, #0000 0) 10% 60%,
+            radial-gradient(circle, #ff0 0.2vmin, #0000 0) 31% 80%,
+            radial-gradient(circle, #ff0 0.3vmin, #0000 0) 80% 10%,
+            radial-gradient(circle, #ff0 0.2vmin, #0000 0) 90% 23%,
+            radial-gradient(circle, #ff0 0.3vmin, #0000 0) 45% 20%,
+            radial-gradient(circle, #ff0 0.5vmin, #0000 0) 13% 24%;
+    background-size: 0.5vmin 0.5vmin;
+    background-repeat: no-repeat;
+    animation: firework 2s infinite;
+  }
+
+  .firework::before {
+    transform: translate(-50%, -50%) rotate(25deg) !important;
+  }
+
+  .firework::after {
+    transform: translate(-50%, -50%) rotate(-37deg) !important;
+  }
+
+  .animated {
+    background-color: green;
+    background-position: left top;
+    padding-top: 95px;
+    margin-bottom: 60px;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+  }
+
+  @-webkit-keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  .fadeOut {
+    -webkit-animation-name: fadeOut;
+    animation-name: fadeOut;
+  }
+
+  // Glitch Landing
+
+  @function rand($min, $max) {
+    @return random() * ($max - $min)+$min;
+  }
+
+  $animation-duration: 4s;
+  $glitch-duration: 50%;
+  $glitch-frequency: 10;
+  $glitch-interval: $glitch-duration / $glitch-frequency;
+
+  @mixin rgb-shift($name) {
+    @keyframes rgb-shift-#{$name} {
+      @for $i from 0 to $glitch-frequency {
+        #{$i * $glitch-interval} {
+          transform: translate(#{rand(-2, 2) * 1%},
+                  #{rand(-0.5, 0.5) * 1%});
+        }
+      }
+
+      #{$glitch-duration},
+      100% {
+        transform: none;
+      }
+    }
+
+    animation: rgb-shift-#{$name} $animation-duration steps(1, jump-end) infinite alternate both;
+  }
+
+  @mixin glitch($name) {
+    @keyframes glitch-#{$name} {
+      @for $i from 0 to $glitch-frequency {
+        $left: 0%;
+        $right: 100%;
+        $top: rand(0, 90) * 1%;
+        $bottom: $top + rand(1, 10) * 1%;
+
+        #{$i * $glitch-interval} {
+          clip-path: polygon($left $top,
+                  $right $top,
+                  $right $bottom,
+                  $left $bottom);
+          transform: translate(#{rand(-8, 8) * 1%},
+                  #{rand(-0.5, 0.5) * 1%});
+        }
+      }
+
+      #{$glitch-duration},
+      100% {
+        clip-path: none;
+        transform: none;
+      }
+    }
+
+    animation: glitch-#{$name} $animation-duration linear infinite alternate both;
+  }
+
+  .glitch {
+    // background: #000 no-repeat center;
+    background-size: 0;
+    height: 100%;
+    -o-object-fit: cover;
+    border-radius: 12px;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    position: relative;
+    background-position: center;
+    overflow: hidden;
+    background-image: url(https://cdn.webrazzi.com/uploads/2023/07/x-524.png);
+
+    &::before,
+    &::after,
+    .channel {
+      background: inherit;
+      background-size: cover;
+      bottom: 0;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    &::before {
+      @include glitch(before);
+      content: "";
+    }
+
+    &::after {
+      @include glitch(after);
+      content: "";
+    }
+
+    .channel {
+      mix-blend-mode: screen;
+
+      &::before {
+        bottom: 0;
+        content: "";
+        display: block;
+        mix-blend-mode: multiply;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+      }
+    }
+
+    .r {
+      @include rgb-shift(r);
+
+      &::before {
+        background: #f00;
+      }
+    }
+
+    .g {
+      @include rgb-shift(g);
+
+      &::before {
+        background: #0f0;
+      }
+    }
+
+    .b {
+      @include rgb-shift(b);
+
+      &::before {
+        background: #00f;
+      }
+    }
+  }
+
+
+  /*
+  Refactor
+   */
+  .card_container {
+    display: flex;
+    width: 100% !important;
+    flex-direction: row;
+    height: auto;
+    flex-flow: wrap;
+    place-content: center;
+    justify-content: space-evenly;
+  }
+
+  .btn:hover {
+    color: #878787;
+    text-decoration: none;
+  }
+
+  .navbar-light .navbar-nav .nav-link {
+    color: rgb(255 255 255 / 50%) !important;
+  }
+
+  .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #ffffff;
+  }
+
+  body {
+    color: #e0e0e0;
+  }
+
+  .btn-danger {
+    border-color: #5a606d !important;
+    color: #ffffff;
+    background-color: #5a606d !important;
+  }
+
+  .btn-danger:hover {
+    border-color: #5a606d !important;
+    color: #ffffff;
+    background-color: #5a606d !important;
+  }
+
+  .btn-success {
+    background-color: #223662 !important;
+    border-color: #223662 !important;
+    /* border-color: #00c9a6; */
+  }
+
+  .btn-success:hover {
+    background-color: #223662 !important;
+    border-color: #223662 !important;
+    /* border-color: #00c9a6; */
+  }
+
+  .ant-checkbox-inner,
+  .ant-checkbox-input {
+    transform: scale(1.5)
+  }
+
+  a:hover {
+    color: #ffff !important;
+    text-decoration: underline;
+  }
+
+  /* Extra small devices (phones, 600px and down) */
+  @media only screen and (max-width: 600px) {
+  }
+
+  /* Small devices (portrait tablets and large phones, 600px and up) */
+  @media only screen and (min-width: 600px) {
+  }
+
+  /* Medium devices (landscape tablets, 768px and up) */
+  @media only screen and (min-width: 768px) {
+  }
+
+  /* Large devices (laptops/desktops, 992px and up) */
+  @media only screen and (min-width: 992px) {
+  }
+
+  /* Extra large devices (large laptops and desktops, 1200px and up) */
+  @media only screen and (min-width: 1200px) {
+  }

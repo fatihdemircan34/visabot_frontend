@@ -1,0 +1,18 @@
+
+    .dashboard_full_height {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        height: 100%;
+    }
+
+    .dashboard_sidebar {
+        background: black;
+        color: white;
+        width: 150px;
+        flex: 0 0 auto;
+    }
+
+    .dashboard_main {
+        flex: 1 1 auto;
+    }

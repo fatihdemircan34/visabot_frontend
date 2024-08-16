@@ -1,0 +1,16 @@
+.userCheck:has(*){
+  @import "../stylesadmin/css/flat-ui-kit";
+  @import "css/page";
+  @import "css/login";
+  @import "css/button";
+  @import "font/css/materialdesignicons";
+  @import "css/dashboard";
+  @import "css/dynamiclist";
+  @import "global";
+  @import "globals";
+  @import "landing/css/style";
+}
+
+
+
+

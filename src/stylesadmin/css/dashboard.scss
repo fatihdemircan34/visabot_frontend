@@ -1,0 +1,22 @@
+
+    @media screen and (max-width: 1000px) {
+        .user-bar {
+            display: none;
+        }
+
+        .user-bar-mobile {
+            display: inherit;
+        }
+    }
+
+    @media screen and (min-width: 1000px) {
+        .user-bar {
+            top: 110px;
+            display: inline-block;
+            position: fixed;
+        }
+
+        .user-bar-mobile {
+            display: none;
+        }
+    }

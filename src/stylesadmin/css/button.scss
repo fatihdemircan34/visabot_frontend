@@ -1,0 +1,16 @@
+
+    .servicebutton {
+        border-radius: 25px;
+        border: 1px solid #c9c8c8;
+        padding: 20px 10px !important;
+        margin: 10px 10px !important;
+        cursor: pointer;
+    }
+
+    .servicebutton:hover {
+        background-color: #f5f5f5;
+    }
+
+    .servicebuttonSelected {
+        background-color: #f5f5f5;
+    }

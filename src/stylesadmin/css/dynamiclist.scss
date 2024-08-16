@@ -1,0 +1,20 @@
+
+    .dListItem {
+        max-height: 0;
+        opacity: 0;
+        animation: grow 1s ease-in-out forwards;
+        -webkit-animation: grow 1s ease-in-out forwards;
+    }
+
+    @-webkit-keyframes grow {
+        to {
+            max-height: 100px;
+            opacity: 1;
+        }
+    }
+    @keyframes grow {
+        to {
+            max-height: 100px;
+            opacity: 1;
+        }
+    }

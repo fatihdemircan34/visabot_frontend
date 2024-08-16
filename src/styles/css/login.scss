@@ -1,0 +1,88 @@
+
+    @media screen and (min-width: 180px) and (max-width: 560px) {
+        .login-card {
+            width: 90vw !important;
+        }
+
+        .login-desc {
+            width: 90vw !important;
+        }
+
+        .h5 {
+            font-size: 1rem !important;
+        }
+
+        .display-4 {
+            font-size: 3rem !important;
+        }
+    }
+
+    @media screen and (min-width: 560px) and ( max-width: 720px) {
+        .login-card {
+            width: 65vw !important;
+        }
+
+        .login-desc {
+            width: 80vw !important;
+        }
+
+        .h5 {
+            font-size: 1.3rem !important;
+        }
+
+        .display-4 {
+            font-size: 3.2rem !important;
+        }
+    }
+
+    @media screen and (min-width: 720px) and (max-width: 900px) {
+        .login-card {
+            width: 50vw !important;
+        }
+
+        .login-desc {
+            width: 75vw !important;
+        }
+    }
+
+
+    @media screen and (min-width: 900px) and (max-width: 1024px) {
+        .login-desc {
+            width: 70vw !important;
+        }
+
+        .login-card {
+            width: 40vw !important;
+        }
+    }
+
+    @media screen and (min-width: 1024px) and (max-width: 1200px) {
+        .login-desc {
+            width: 50vw !important;
+        }
+
+        .login-card {
+            width: 35vw !important;
+        }
+    }
+
+    @media screen and (min-width: 1201px) and (max-width: 1300px) {
+        .login-desc {
+            width: 40vw !important;
+        }
+
+        .login-card {
+            width: 35vw !important;
+        }
+    }
+
+
+    @media screen and (min-width: 1301px) {
+        .login-desc {
+            width: 40vw !important;
+        }
+
+        .login-card {
+            width: 30vw !important;
+        }
+    }
