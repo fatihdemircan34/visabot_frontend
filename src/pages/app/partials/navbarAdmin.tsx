@@ -9,7 +9,8 @@ import React from "react";
 const links = [
     { key: 'pg1', name: 'Ana Sayfa', href: '/', children: [], route: null },
 
-    { key: 'pg4', name: 'Müşteriler ve Randevu Yönetimi', href: '/panel/customer/customers', route: null },
+    { key: 'pg4', name: 'Müşteriler Yönetimi', href: '/panel/customer/customers', route: null },
+    { key: 'pg5', name: 'Randevu Oluşturma', href: '/panel/appointment/appointment', route: null },
 
     { key: 'pg7', name: 'Kullanıcılar', href: '/panel/account/accounts', route: null },
 
