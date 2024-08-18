@@ -20,6 +20,7 @@ export interface DataGridControlProps {
   customFilterModel?: GridCustomFilterModel;
   customFilterModel2?: GridCustomFilterModel;
   customFilterModel3?: GridCustomFilterModel;
+  customFilterModel4?: GridCustomFilterModel;
   searchQueryModel?: GridCustomFilterModel[];
   searchQuery?: string;
   api: string;

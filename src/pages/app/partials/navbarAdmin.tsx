@@ -16,9 +16,10 @@ const links = [
     { key: 'pg6', name: 'Ayarlar', href: '#', route: '/panel/settings',
         children: [
 
-            { key: 'pg63', name: 'Kullanıcılar', href: '/panel/settings/accounts', icon: 'mdi mdi-account' },
+            { key: 'pg64', name: 'Site Hesapları', href: '/panel/settings/siteaccounts', icon: 'mdi mdi-account-circle' },
             { key: 'pg61', name: 'Genel Ayarları', href: '/panel/settings/general', icon: 'mdi mdi-settings' },
             { key: 'pg62', name: 'Proxy Ayarları', href: '/panel/settings/proxy', icon: 'mdi mdi-shape-outline' },
+            { key: 'pg63', name: 'Sistem Kullanıcıları', href: '/panel/settings/accounts', icon: 'mdi mdi-account' },
         ]
     },
 ];
@@ -35,7 +36,7 @@ export default function NavbarAdmin(LogoutEvent: () => void) {
     const menuItems = links.map((link) => {
         if((link.children?.length || 0) > 0){
             return (<li key={link.key}  className={clsx('nav-item dropdown', { 'active': pathname?.includes(link.route || ""), },)}>
-                <a href="#" className="nav-link dropdown-toggle" data-toggle="dropdown">
+                <a href="#" className="nav-link dropdown-toggle " data-toggle="dropdown">
                     {link.name}
                 </a>
                 <div className="dropdown-menu dropdown-menu-right">

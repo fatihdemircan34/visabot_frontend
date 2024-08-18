@@ -1,4 +1,4 @@
-export class StatusObject {
+export class EnumObject {
     declare key: number;
     declare code: string;
 }

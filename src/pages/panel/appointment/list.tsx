@@ -14,8 +14,7 @@ import {CustomerObject} from "@/objects/customer.object";
 import {v4 as uuidv4} from "uuid";
 import {AppointmentStatusEnum} from "@/enums/appointmentStatus.enum";
 import DataGridComponent from "@/components/DataGrid/DataGridComponent";
-import {CountryObject} from "@/objects/country.object";
-import {StatusObject} from "@/objects/status.object";
+import {EnumObject} from "@/objects/enum.object";
 
 let CurrentKey: number;
 let CurrentConfirmAction: (isOkay: boolean) => Promise<void>;
@@ -28,18 +27,23 @@ export default function List(){
     const [CustomFilter1, setCustomFilter1] = React.useState<GridCustomFilterModel>();
     const [CustomFilter2, setCustomFilter2] = React.useState<GridCustomFilterModel>();
     const [CustomFilter3, setCustomFilter3] = React.useState<GridCustomFilterModel>();
+    const [CustomFilter4, setCustomFilter4] = React.useState<GridCustomFilterModel>();
 
-    const [CountryData, setCountryData] = useState<CountryObject[]>([]);
+    const [CountryData, setCountryData] = useState<EnumObject[]>([]);
     const [CurrentCountry, setCurrentCountry] = useState<number>(-1);
 
-    const [StatusData, setStatusData] = useState<StatusObject[]>([]);
+    const [StatusData, setStatusData] = useState<EnumObject[]>([]);
     const [CurrentStatus, setCurrentStatus] = useState<number>(-1);
+
+    const [PriorityData, setPriorityData] = useState<EnumObject[]>([]);
+    const [CurrentPriority, setCurrentPriority] = useState<number>(-1);
 
     const [CurrentType, setCurrentType] = useState<number>(-1);
 
     useEffect(() => {
         GetCounties();
         GetStatuses();
+        GetPriorities();
     }, []);
 
 
@@ -55,6 +59,15 @@ export default function List(){
 
     async function GetStatuses(){
         const resp = await ApiGet('/admin/appointment/statuses');
+        if (!resp.success) {
+            iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
+            return;
+        }
+        setStatusData(resp.data);
+    }
+
+    async function GetPriorities(){
+        const resp = await ApiGet('/admin/appointment/priorities');
         if (!resp.success) {
             iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
             return;
@@ -162,6 +175,19 @@ export default function List(){
             setCustomFilter3(undefined);
     }
 
+    function SelectPriority(item: number){
+        setCurrentPriority(item);
+        if(item > -1)
+            setCustomFilter4({
+                RunKey: Date.now().toString(),
+                FieldName: "priority",
+                FilterValue: item,
+                IsString: true
+            });
+        else
+            setCustomFilter4(undefined);
+    }
+
 
 
 
@@ -188,6 +214,7 @@ export default function List(){
         { field: 'passportNumber', headerName: 'Pasaport No', flex: 1},
         { field: 'contactNumber', headerName: 'Telefon', flex: 1},
         { field: 'country_name', headerName: 'Vize Ülkesi', flex: 1},
+        { field: 'priority', headerName: 'Öncelik', flex: 1},
         { field: 'appointment_date', headerName: 'Randevu Tarihi', flex: 1},
         { field: 'is_vip', headerName: 'Tipi', flex: 1, renderCell: (params: GridRenderCellParams<any, boolean>) => {
                 if (!params.value)
@@ -213,8 +240,6 @@ export default function List(){
                 return <button type="button" className="btn btn-sm btn-soft-danger py-1" onClick={() => DeleteAppointmentRequest(parseInt(params.row?.key ?? "0"))}>Randevu Sil</button>;
             }
         },
-
-
     ];
 
 
@@ -235,7 +260,7 @@ export default function List(){
             <br></br>
 
             <div className="row">
-                <div className="col-4">
+                <div className="col-6">
                     <div className="form-group">
                         <h5>Başvuru Ülkesi</h5>
                         <select name="country" style={{color: '#000000'}} className="form-select form-control" value={CurrentCountry} onChange={(e) => SelectCountry(parseInt(e.target.value ?? "-1"))}>
@@ -245,7 +270,7 @@ export default function List(){
                     </div>
                 </div>
 
-                <div className="col-4">
+                <div className="col-6">
                     <div className="form-group">
                         <h5>Randevu Tipi</h5>
                         <select name="is_vip" style={{color: '#000000'}} className="form-select form-control" value={CurrentType} onChange={(e) => SelectType(parseInt(e.target.value ?? "-1"))}>
@@ -256,7 +281,7 @@ export default function List(){
                     </div>
                 </div>
 
-                <div className="col-4">
+                <div className="col-6">
                     <div className="form-group">
                         <h5>Durumu</h5>
                         <select name="status" style={{color: '#000000'}} className="form-select form-control" value={CurrentStatus} onChange={(e) => SelectStatus(parseInt(e.target.value ?? "-1"))}>
@@ -266,10 +291,25 @@ export default function List(){
                     </div>
                 </div>
 
+                <div className="col-6">
+                    <div className="form-group">
+                        <h5>Öncelik</h5>
+                        <select name="priority" style={{color: '#000000'}} className="form-select form-control" value={CurrentPriority} onChange={(e) => SelectPriority(parseInt(e.target.value ?? "-1"))}>
+                            <option value="-1">Tümü</option>
+                            {(PriorityData?.length || 0) <= 0 ? (<></>) : PriorityData.map(t => <option key={t.key} id={`status_${t.key}`} value={t.key}>{t.code}</option>)}
+                        </select>
+                    </div>
+                </div>
+
                 <div className="col-12">
 
                     <div style={{height: 700, width: '100%'}}>
-                        <DataGridComponent filterText="Pasaport Numarası, isim, soyisim, telefon" api={'/admin/appointment/dataservice'} columns={columns} customFilterModel={CustomFilter1} customFilterModel2={CustomFilter2} customFilterModel3={CustomFilter3} isRedis={true}/>
+                        <DataGridComponent filterText="Pasaport Numarası, isim, soyisim, telefon" api={'/admin/appointment/dataservice'}
+                                           columns={columns} isRedis={true}
+                                           customFilterModel={CustomFilter1}
+                                           customFilterModel2={CustomFilter2}
+                                           customFilterModel3={CustomFilter3}
+                                           customFilterModel4={CustomFilter4}/>
                     </div>
 
                 </div>
