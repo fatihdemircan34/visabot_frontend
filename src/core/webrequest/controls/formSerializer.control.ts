@@ -3,6 +3,10 @@
 export function FormSerializerControl(formElementId: string) {
 
     const form: HTMLFormElement = document.getElementById(formElementId) as HTMLFormElement;
+
+    if(form == undefined)
+        return {};
+
     const serialized: Record<string, any> = {}
 
     for (let i = 0; i < form.elements.length; i++) {

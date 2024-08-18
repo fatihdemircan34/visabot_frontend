@@ -9,14 +9,14 @@ import React from "react";
 const links = [
     { key: 'pg1', name: 'Ana Sayfa', href: '/', children: [], route: null },
 
-    { key: 'pg4', name: 'Müşteriler Yönetimi', href: '/panel/customer/customers', route: null },
-    { key: 'pg5', name: 'Randevu Oluşturma', href: '/panel/appointment/appointment', route: null },
+    { key: 'pg5', name: 'Randevu Oluştur', href: '/panel/appointment', route: null },
 
-    { key: 'pg7', name: 'Kullanıcılar', href: '/panel/account/accounts', route: null },
+    { key: 'pg4', name: 'Randevu Listesi', href: '/panel/appointment/list', route: null },
 
     { key: 'pg6', name: 'Ayarlar', href: '#', route: '/panel/settings',
         children: [
 
+            { key: 'pg63', name: 'Kullanıcılar', href: '/panel/settings/accounts', icon: 'mdi mdi-account' },
             { key: 'pg61', name: 'Genel Ayarları', href: '/panel/settings/general', icon: 'mdi mdi-settings' },
             { key: 'pg62', name: 'Proxy Ayarları', href: '/panel/settings/proxy', icon: 'mdi mdi-shape-outline' },
         ]

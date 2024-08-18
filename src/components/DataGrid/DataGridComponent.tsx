@@ -19,6 +19,7 @@ export interface DataGridControlProps {
   columns: GridColDef[];
   customFilterModel?: GridCustomFilterModel;
   customFilterModel2?: GridCustomFilterModel;
+  customFilterModel3?: GridCustomFilterModel;
   searchQueryModel?: GridCustomFilterModel[];
   searchQuery?: string;
   api: string;

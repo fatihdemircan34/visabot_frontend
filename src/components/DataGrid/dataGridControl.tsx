@@ -35,6 +35,10 @@ export class DataGridControl {
           props.customFilterModel2?.RunKey == '-1'
               ? undefined
               : props.customFilterModel2,
+      customFilter3:
+          props.customFilterModel3?.RunKey == '-1'
+              ? undefined
+              : props.customFilterModel3,
       sortModel,
       filterModel,
     });

@@ -35,7 +35,7 @@ export default function App(props: AppProps & DocumentHeadTagsProps) {
         const userSession = SessionControl.User();
         console.log(`userSession >>> ${userSession}`);
         const isUserStyle: boolean = (userSession === undefined || userSession?.role_id !== 1);
-        (document.getElementsByTagName('Html')[0] as HTMLElement).className = isUserStyle ? "userCheck" : "adminCheck";
+        (document.getElementsByTagName('Html')[0] as HTMLElement).className = isUserStyle ? "adminCheck" : "adminCheck";
 
     }, []);
 

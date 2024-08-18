@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function FooterAdmin() {
-    return (<footer className="py-5" style={{backgroundColor: '#fcfbfb', borderTop: '2px solid #f5f5f5', marginTop: 250}}>
+    return (<footer className="py-5" style={{backgroundColor: '#fcfbfb', borderTop: '2px solid #f5f5f5', marginTop: 250, height: 400}}>
             <div className="container">
                 <section className="footer-content text-center pb-0">
                     <div>

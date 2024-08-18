@@ -38,6 +38,9 @@ export default function AdminDashboard(): ReturnType<FC> {
                 <div className="col-12 col-sm-6 col-md-4 col-lg-4">
                     <CountCard Title="Hatalı Toplam" Count={'0'}/>
                 </div>
+                <div className="col-12 col-sm-6 col-md-4 col-lg-4">
+                    <CountCard Title="İptal Toplam" Count={'0'}/>
+                </div>
             </div>
 
 

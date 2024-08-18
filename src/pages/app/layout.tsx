@@ -39,7 +39,7 @@ const Layout = ({ children } : any) => {
         LogoutClose();
         SessionControl.Clear();
         router.push('/').then((off) =>{
-            (document.getElementsByTagName('Html')[0] as HTMLElement).className = "userCheck";
+            (document.getElementsByTagName('Html')[0] as HTMLElement).className = "adminCheck";
         });
     }
 
@@ -57,11 +57,10 @@ const Layout = ({ children } : any) => {
 
     const currentFooter = () => {
         const user = SessionControl.User();
-        if(user === undefined || user.role_id !== 1)
-            return Footer();
-        else{
+        if(user !== undefined && user.role_id === 1)
             return FooterAdmin();
-        }
+        else
+            return Footer();
     }
 
 

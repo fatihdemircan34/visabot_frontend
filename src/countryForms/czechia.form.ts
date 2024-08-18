@@ -1,9 +1,7 @@
-import React from 'react';
-import { StepForm } from '../country-forms';
+import {CountryStepsInterface} from "@/interfaces/countrySteps.interface";
 
-
-const CzechiaForm = () => {
-    const steps = [
+export class CzechiaForm implements CountryStepsInterface{
+     Steps = [
         {
             content: [
                 {
@@ -66,13 +64,4 @@ const CzechiaForm = () => {
         },
         // Diğer adımlar benzer şekilde eklenebilir
     ];
-
-    return (
-        <div>
-            <h2>Czechia Form</h2>
-            <StepForm steps={steps} />
-        </div>
-    );
-};
-
-export default CzechiaForm;
+}

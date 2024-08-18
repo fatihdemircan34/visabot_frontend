@@ -10,7 +10,7 @@ import {WebResponseObject} from "@/core/webrequest/objects/webResponse.object";
 export default function MyDocument(props: any) {
 
 
-    return (<Html lang="en" className="userCheck">
+    return (<Html lang="en" className="adminCheck">
         <Head>
             <Script src="/assets/js/lang-config.js" strategy="beforeInteractive"/>
             <Script src="/assets/js/translation.js" strategy="beforeInteractive"/>
