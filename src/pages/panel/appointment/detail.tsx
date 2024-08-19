@@ -1,30 +1,76 @@
-import {CustomerObject} from "@/objects/customer.object";
 import React from "react";
 import {ApiPost} from "@/core/webrequest/controls/webRequest.control";
+import {AppointmentObject} from "@/objects/appointment.object";
+import {EnumObject} from "@/objects/enum.object";
+import {CountryStepsInterface} from "@/interfaces/countrySteps.interface";
+import {CountryEnum} from "@/enums/country.enum";
+import {CzechiaForm} from "@/countryForms/czechia.form";
+import {EstoniaForm} from "@/countryForms/estonia.form";
+import {FranceForm} from "@/countryForms/france.form";
+import {NetherlandsForm} from "@/countryForms/netherlands.form";
+import {ItalyForm} from "@/countryForms/italy.form";
+import {BulgariaForm} from "@/countryForms/bulgaria.form";
+import FormRenderer from "@/pages/panel/appointment/formRenderer";
+import {FormSerializerControl} from "@/core/webrequest/controls/formSerializer.control";
+import {AppointmentStatusEnum} from "@/enums/appointmentStatus.enum";
 
 
 interface DetailProps{
-    user: CustomerObject;
-    closeAction: (isRefresh: boolean) => void
+    appointment: AppointmentObject;
+    countryData: EnumObject[],
+    statusData: EnumObject[],
+    priorityData: EnumObject[],
+    closeAction: (isRefresh: boolean) => void,
+    showMessage: (title: string, message: string) => void,
 }
 
 const Detail = (props: DetailProps) => {
-    const user:CustomerObject = props.user;
+    const app:AppointmentObject = props.appointment;
+    const CountryData = props.countryData;
+    const PriorityData = props.priorityData;
+    const StatusData = props.statusData;
+    const CurrentCountry = app.country;
 
-    async function SaveSettings(){
 
 
 
-        // if(!resp.success){
-        //     if(document.getElementById('ErrorResultLabel') != undefined)
-        //         (document.getElementById('ErrorResultLabel') as HTMLSpanElement).innerHTML = "Hata Oluştu!" +( resp.message ?? "Bilinmeyen bir hata!");
-        // }
+    function CountryForm(props: {CurrentCountry: number}){
+        let steps: CountryStepsInterface|undefined = undefined;
 
-        props.closeAction(true);
+        switch (props.CurrentCountry){
+            case CountryEnum.CzechRepublic: steps = new CzechiaForm(); break;
+            case CountryEnum.Estonia: steps = new EstoniaForm(); break;
+            case CountryEnum.France: steps = new FranceForm(); break;
+            case CountryEnum.Netherlands: steps = new NetherlandsForm(); break;
+            case CountryEnum.Italy: steps = new ItalyForm(); break;
+            case CountryEnum.Bulgaria: steps = new BulgariaForm(); break;
+        }
+
+        if(steps != undefined)
+            return (<FormRenderer Steps={steps.Steps} FormSave={Save} Dataset={app.dataset}/>);
+        else
+            return (<></>);
     }
 
 
 
+
+    const Save = async (formData: Record<string, any>) => {
+
+        formData = {
+            ...formData,
+            ...FormSerializerControl("AppointmentDetailForm")
+        }
+
+        const saveReq = await ApiPost('/admin/appointment/save', formData);
+        if (!saveReq.success) {
+            props.showMessage("Hata", saveReq.message || "Bilinmeyen bir hata oluştu!");
+            return;
+        }
+
+        props.showMessage("Başarılı", "Randevu başarılı bir şekilde oluşturuldu!");
+        props.closeAction(true);
+    }
 
 
 
@@ -35,56 +81,69 @@ const Detail = (props: DetailProps) => {
 
         <div className="row m-3">
             <div className="col-6">
-                <h4>Hesap Detayı</h4>
+                <h4>Randevu Detayı</h4>
+            </div>
+            <div className="col-6">
+                <button onClick={() => props.closeAction(false)} type="button" className="btn btn-secondary btn-pill float-right">Kapat</button>
             </div>
         </div>
 
         <hr/>
 
+        <form id="AppointmentDetailForm" className="mt-3">
 
+            <input type="hidden" name="key"/>
 
-        <div className="row mt-2">
-            <div className="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
-                <div className="form-group">
-                    <label htmlFor="txtInfo">Takip Kredisi</label>
+            <div className="row d-flex justify-content-center">
 
-                    <input type="text" name="user_follow_credit" className="form-control" id="user_follow_credit"
-                           aria-describedby="user_follow_credit" style={{color: '#000000'}} defaultValue={user?.credit_follow ?? "0"}/>
-
+                <div className="col-6">
+                    <div className="form-group">
+                        <label className="h6">Başvuru Ülkesi</label>
+                        <select name="country" disabled={true} style={{color: '#000000'}} className="form-select form-control" value={app.country}>
+                            {(CountryData?.length || 0) <= 0 ? (<></>) : CountryData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key}>{t.code}</option>)}
+                        </select>
+                    </div>
                 </div>
+
+                <div className="col-6">
+                    <div className="form-group">
+                        <label className="h6">Durumu</label>
+                        <select name="status" disabled={app.status >= AppointmentStatusEnum.InProgress} style={{color: '#000000'}} className="form-select form-control">
+                            <option value="-1">Tümü</option>
+                            {(StatusData?.length || 0) <= 0 ? (<></>) : StatusData.map(t => <option key={t.key} id={`status_${t.key}`} value={t.key} selected={app.status == t.key}>{t.code}</option>)}
+                        </select>
+                    </div>
+                </div>
+
+                <div className="col-6">
+                    <div className="form-group">
+                        <label className="h6">Randevu Tipi</label>
+                        <select name="is_vip" style={{color: '#000000'}} className="form-select form-control">
+                            <option value="0" selected={!app.is_vip}>Standart Randevu</option>
+                            <option value="1" selected={app.is_vip}>Vip Randevu</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className="col-6">
+                    <div className="form-group">
+                        <label className="h6">Öncelik</label>
+                        <select name="priority" style={{color: '#000000'}} className="form-select form-control">
+                            {(PriorityData?.length || 0) <= 0 ? (<></>) : PriorityData.map(t => <option key={t.key} id={`priority_${t.key}`} value={t.key} selected={t.key == app.priority}>{t.code}</option>)}
+                        </select>
+                    </div>
+                </div>
+
             </div>
-            <div className="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
-                <div className="form-group">
-                    <label htmlFor="txtInfo">Beğeni Kredisi</label>
-                    <input type="text" name="user_like_credit" className="form-control" id="user_like_credit"
-                           aria-describedby="user_like_credit" style={{color: '#000000'}} defaultValue={user?.credit_like ?? "0"}/>
-                </div>
-            </div>
-            <div className="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
-                <div className="form-group">
-                    <label htmlFor="txtInfo">Yorum Kredisi</label>
-                    <input type="text" name="user_comment_credit" className="form-control" id="user_comment_credit"
-                           aria-describedby="user_comment_credit" style={{color: '#000000'}} defaultValue={user?.credit_comment ?? "0"}/>
-                </div>
-            </div>
-            <div className="col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
-                <div className="form-group">
-                    <label htmlFor="txtInfo">İzleme Kredisi</label>
-                    <input type="text" name="user_watch_credit" className="form-control" id="user_watch_credit"
-                           aria-describedby="user_watch_credit" style={{color: '#000000'}} defaultValue={user?.credit_watch ?? "0"}/>
-                </div>
+        </form>
+
+        <div className="row">
+            <div className="col-12">
+                <hr/>
             </div>
         </div>
 
-        <div className="row mt-2">
-            <div className="col-12 col-md-6 mt-3">
-                <button onClick={() => SaveSettings()} type="button" className="btn btn-danger btn-pill mr-3">Kaydet & Kapat</button>
-                <button onClick={() => props.closeAction(false)} type="button" className="btn btn-secondary btn-pill">Kapat</button>
-            </div>
-
-        </div>
-
-
+        <CountryForm CurrentCountry={CurrentCountry}/>
 
         <div className="row mt-5">
             <div className="col-12">

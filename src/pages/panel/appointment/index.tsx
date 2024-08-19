@@ -147,8 +147,8 @@ export default function AppointmentIndex(){
                     <div className="col-4">
                         <div className="form-group">
                             <h5>Öncelik</h5>
-                            <select name="priority" style={{color: '#000000'}} className="form-select form-control" value={CurrentCountry} onChange={(e) => setCurrentPriority(Number(e.target.value))}>
-                                {(PriorityData?.length || 0) <= 0 ? (<></>) : PriorityData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key}>{t.code}</option>)}
+                            <select name="priority" style={{color: '#000000'}} className="form-select form-control" value={CurrentPriority} onChange={(e) => setCurrentPriority(Number(e.target.value))}>
+                                {(PriorityData?.length || 0) <= 0 ? (<></>) : PriorityData.map(t => <option key={t.key} id={`priority_${t.key}`} value={t.key}>{t.code}</option>)}
                             </select>
                         </div>
                     </div>
@@ -166,8 +166,6 @@ export default function AppointmentIndex(){
         </div>
 
         <iPrompt.MessageBox/>
-        <iPrompt.ConfirmBox Callback={(res) => {
-        }}/>
 
     </>)
 }

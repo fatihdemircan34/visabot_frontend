@@ -2,9 +2,9 @@
 import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 import {ApiGet} from "@/core/webrequest/controls/webRequest.control";
-import {CustomerObject} from "@/objects/customer.object";
 import {SessionControl} from "@/core/websession/controls/session.control";
 import {GetCookie} from "@/core/webcookie/controls/cookieClient.control";
+import {AccountObject} from "@/objects/account.object";
 
 
 export async function middleware(request: NextRequest) {
@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
         const sessionResponse = await ApiGet('/profile/session', GetCookie("uuid", request), GetCookie("ssid",request));
         console.log(`CheckSession => ${JSON.stringify(sessionResponse)}`);
 
-        let user:CustomerObject;
+        let user:AccountObject;
         if(sessionResponse.success){
             user = sessionResponse.data;
             SessionControl.SetUser(user, response);

@@ -1,12 +1,25 @@
 import React, { useState } from 'react';
 import {VisaFormField, VisaForm} from "@/controls/visaForm";
 
-const FormRenderer = (props: {Steps: any, FormSave:(formData: Record<string, any>) => Promise<void>}) => {
-    const [currentStep, setCurrentStep] = useState(1);
-    const [formData, setFormData] = useState<Record<string, any>>({});
+const FormRenderer = (props: {Steps: any, FormSave:(formData: Record<string, any>) => Promise<void>, Dataset?: any}) => {
 
     const Steps = props.Steps;
+    let currentData = {}
+    if(props.Dataset != undefined){
+        const dataset = JSON.parse(props.Dataset)
+        VisaForm.fromJSON(Steps).steps?.map(c => {
+            c.content?.map(t => {
+                currentData = {
+                    ...currentData,
+                    [t.name]: dataset[t.name as string],
+                }
+            });
+        });
+    }
 
+
+    const [currentStep, setCurrentStep] = useState(1);
+    const [formData, setFormData] = useState<Record<string, any>>(currentData);
 
     const handleNext = () => {
         if (currentStep < Steps.length) {
@@ -28,14 +41,18 @@ const FormRenderer = (props: {Steps: any, FormSave:(formData: Record<string, any
         });
     };
 
+
+
+
     const renderStep = (stepContent: VisaFormField[]) => {
 
         return stepContent?.map((input) => {
+
             switch (input.type) {
                 case 'text':
                 case 'email':
                 case 'number':
-                    return (<div className="col-7 mt-1">
+                    return (<div className={`${props.Dataset == undefined ? 'col-7' : 'col-6'} mt-1`}>
                         <div className="form-group">
                             <label className="h6">{input.label}</label>
                             <input type={input.type} name={input.name} placeholder={input.placeholder} value={formData[input.name] || ''}
@@ -43,7 +60,7 @@ const FormRenderer = (props: {Steps: any, FormSave:(formData: Record<string, any
                         </div>
                     </div>);
                 case 'select':
-                    return (<div className="col-7 mt-1">
+                    return (<div className={`${props.Dataset == undefined ? 'col-7' : 'col-6'} mt-1`}>
                         <div className="form-group">
                             <label className="h6">{input.label}</label>
                             <select name={input.name} value={formData[input.name as string] || ''} onChange={handleChange} style={{color: '#000000'}} className="form-select form-control">
@@ -63,8 +80,8 @@ const FormRenderer = (props: {Steps: any, FormSave:(formData: Record<string, any
     };
 
     return (
-        <div className="row d-flex justify-content-center">
-            <div className="col-7">
+        <div className={`row ${props.Dataset == undefined ? 'd-flex justify-content-center' : ''}`}>
+            <div className={`${props.Dataset == undefined ? 'col-7' : 'col-12'}`}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                     {
                         Steps.map((_: any, index: any) => (<div
@@ -79,7 +96,7 @@ const FormRenderer = (props: {Steps: any, FormSave:(formData: Record<string, any
 
             {renderStep(VisaForm.fromJSON(Steps).steps[currentStep - 1]?.content)}
 
-            <div className="col-7 mt-5">
+            <div className={`${props.Dataset == undefined ? 'col-7' : 'col-12'} mt-5`}>
 
                 {currentStep > 1 &&
                     (<button onClick={handlePrevious} className="btn btn-secondary">

@@ -1,8 +1,5 @@
 import Head from "next/head";
 import React, {useEffect, useState} from "react";
-import {AccountObject} from "@/objects/account.object";
-import {SocketClientControl} from "@/core/websocket/controls/socketClient.control";
-import {SocketActionsEnum} from "@/core/websocket/enums/socketActions.enum";
 import {ApiGet, ApiPost} from "@/core/webrequest/controls/webRequest.control";
 import Prompt from "@/pages/app/components/prompt";
 import Link from "next/link";
@@ -10,14 +7,18 @@ import DataGridControl, {GridCustomFilterModel} from "@/pages/app/components/dat
 import {GridColDef, GridRenderCellParams} from "@mui/x-data-grid";
 import RightModal from "@/controls/rightModal";
 import Detail from "@/pages/panel/appointment/detail";
-import {CustomerObject} from "@/objects/customer.object";
 import {v4 as uuidv4} from "uuid";
 import {AppointmentStatusEnum} from "@/enums/appointmentStatus.enum";
 import DataGridComponent from "@/components/DataGrid/DataGridComponent";
 import {EnumObject} from "@/objects/enum.object";
+import {AppointmentObject} from "@/objects/appointment.object";
+import { PriorityEnum } from "@/enums/priority.enum";
 
 let CurrentKey: number;
 let CurrentConfirmAction: (isOkay: boolean) => Promise<void>;
+let CountryDataList: EnumObject[] = [];
+let StatusDataList: EnumObject[] = [];
+let PriorityDataList: EnumObject[] = [];
 
 export default function List(){
 
@@ -40,6 +41,7 @@ export default function List(){
 
     const [CurrentType, setCurrentType] = useState<number>(-1);
 
+
     useEffect(() => {
         GetCounties();
         GetStatuses();
@@ -55,6 +57,7 @@ export default function List(){
             return;
         }
         setCountryData(resp.data);
+        CountryDataList = resp.data;
     }
 
     async function GetStatuses(){
@@ -64,6 +67,7 @@ export default function List(){
             return;
         }
         setStatusData(resp.data);
+        StatusDataList = resp.data;
     }
 
     async function GetPriorities(){
@@ -72,26 +76,29 @@ export default function List(){
             iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
             return;
         }
-        setStatusData(resp.data);
+        setPriorityData(resp.data);
+        PriorityDataList = resp.data;
     }
 
 
 
-    async function SelectAppointment(key: number) {
-        const resp = await ApiPost('/admin/customer/select', {id: key})
-        if (!resp.success) {
-            iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
-            return;
-        }
-
+    async function SelectAppointment(item: AppointmentObject) {
         rightModal.Open(Detail({
-            user: resp.data,
+            appointment: item,
+            countryData: CountryDataList,
+            statusData: StatusDataList,
+            priorityData: PriorityDataList,
             closeAction: (isRefresh) => {
-                if(isRefresh)
-                    setCustomFilter1({RunKey: "-1", FieldName: "is_bot", FilterValue: false, IsString: false});
+                if(isRefresh){
+                    setCustomFilter1(undefined);
+                    setCustomFilter2(undefined);
+                    setCustomFilter3(undefined);
+                    setCustomFilter4(undefined);
+                }
 
                 rightModal.Close();
-            }
+            },
+            showMessage: (title, message) => iPrompt.MessageBoxShow(title, message)
         }));
     }
 
@@ -205,6 +212,18 @@ export default function List(){
         }
     }
 
+    const getPriorityName = (priority: number) => {
+        switch (priority){
+            default:
+            case PriorityEnum.Standard: return "Standart";
+            case PriorityEnum.Level1: return "Level1";
+            case PriorityEnum.Level2: return "Level2";
+            case PriorityEnum.Level3: return "Level3";
+            case PriorityEnum.Level4: return "Level4";
+            case PriorityEnum.Level5: return "Level5";
+        }
+    }
+
 
     const columns: GridColDef[] = [
 
@@ -214,7 +233,12 @@ export default function List(){
         { field: 'passportNumber', headerName: 'Pasaport No', flex: 1},
         { field: 'contactNumber', headerName: 'Telefon', flex: 1},
         { field: 'country_name', headerName: 'Vize Ülkesi', flex: 1},
-        { field: 'priority', headerName: 'Öncelik', flex: 1},
+        { field: 'priority', headerName: 'Öncelik', flex: 1, renderCell: (params: GridRenderCellParams<any, number>) => {
+                if (!params.value)
+                    return '';
+                return getPriorityName(params.value);
+            }
+        },
         { field: 'appointment_date', headerName: 'Randevu Tarihi', flex: 1},
         { field: 'is_vip', headerName: 'Tipi', flex: 1, renderCell: (params: GridRenderCellParams<any, boolean>) => {
                 if (!params.value)
@@ -229,15 +253,23 @@ export default function List(){
             }
         },
         { field: 'detail', headerName: 'Detay', flex: 1, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
-                return <button type="button" className="btn btn-sm btn-primary py-1" onClick={() => SelectAppointment(parseInt(params.row?.key ?? "0"))}>Detay</button>;
+                return <button type="button" className="btn btn-sm btn-primary py-1" onClick={() => SelectAppointment(params.row)}>Detay</button>;
             }
         },
         { field: 'cancel', headerName: 'İptal', flex: 1, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
+
+            if(params.row?.status == AppointmentStatusEnum.New || params.row?.status == AppointmentStatusEnum.InQueue || params.row?.status == AppointmentStatusEnum.InProgress)
                 return <button type="button" className="btn btn-sm btn-danger py-1" onClick={() => CancelAppointmentRequest(parseInt(params.row?.key ?? "0"))}>Randevu İptal</button>;
+            else
+                return <></>
+
             }
         },
-        { field: 'delete', headerName: 'İptal', flex: 1, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
-                return <button type="button" className="btn btn-sm btn-soft-danger py-1" onClick={() => DeleteAppointmentRequest(parseInt(params.row?.key ?? "0"))}>Randevu Sil</button>;
+        { field: 'delete', headerName: 'Kayıt Sil', flex: 1, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
+                if(params.row?.status == AppointmentStatusEnum.New || params.row?.status == AppointmentStatusEnum.InQueue)
+                    return <button type="button" className="btn btn-sm btn-soft-danger py-1" onClick={() => DeleteAppointmentRequest(parseInt(params.row?.key ?? "0"))}>Randevu Sil</button>;
+                else
+                    return <></>
             }
         },
     ];
@@ -262,7 +294,7 @@ export default function List(){
             <div className="row">
                 <div className="col-6">
                     <div className="form-group">
-                        <h5>Başvuru Ülkesi</h5>
+                        <label className="text-black" style={{fontSize: "1rem"}}>Başvuru Ülkesi</label>
                         <select name="country" style={{color: '#000000'}} className="form-select form-control" value={CurrentCountry} onChange={(e) => SelectCountry(parseInt(e.target.value ?? "-1"))}>
                             <option value="-1">Tümü</option>
                             {(CountryData?.length || 0) <= 0 ? (<></>) : CountryData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key}>{t.code}</option>)}
@@ -272,7 +304,7 @@ export default function List(){
 
                 <div className="col-6">
                     <div className="form-group">
-                        <h5>Randevu Tipi</h5>
+                        <label className="text-black" style={{fontSize: "1rem"}}>Randevu Tipi</label>
                         <select name="is_vip" style={{color: '#000000'}} className="form-select form-control" value={CurrentType} onChange={(e) => SelectType(parseInt(e.target.value ?? "-1"))}>
                             <option value="-1">Tümü</option>
                             <option value="0">Standart Randevu</option>
@@ -283,7 +315,7 @@ export default function List(){
 
                 <div className="col-6">
                     <div className="form-group">
-                        <h5>Durumu</h5>
+                        <label className="text-black" style={{fontSize: "1rem"}}>Durumu</label>
                         <select name="status" style={{color: '#000000'}} className="form-select form-control" value={CurrentStatus} onChange={(e) => SelectStatus(parseInt(e.target.value ?? "-1"))}>
                             <option value="-1">Tümü</option>
                             {(StatusData?.length || 0) <= 0 ? (<></>) : StatusData.map(t => <option key={t.key} id={`status_${t.key}`} value={t.key}>{t.code}</option>)}
@@ -293,7 +325,7 @@ export default function List(){
 
                 <div className="col-6">
                     <div className="form-group">
-                        <h5>Öncelik</h5>
+                        <label className="text-black" style={{fontSize: "1rem"}}>Öncelik</label>
                         <select name="priority" style={{color: '#000000'}} className="form-select form-control" value={CurrentPriority} onChange={(e) => SelectPriority(parseInt(e.target.value ?? "-1"))}>
                             <option value="-1">Tümü</option>
                             {(PriorityData?.length || 0) <= 0 ? (<></>) : PriorityData.map(t => <option key={t.key} id={`status_${t.key}`} value={t.key}>{t.code}</option>)}

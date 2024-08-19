@@ -1463,7 +1463,7 @@ pre {
     background-color: transparent;
     border: 0; }
   .form-control:focus {
-    color: #bbbbbb;
+    color: #000000;
     background-color: #ffffff;
     border-color: #bfc1fd;
     outline: 0;
@@ -1488,7 +1488,7 @@ pre {
     opacity: 1; }
 
 select.form-control:focus::-ms-value {
-  color: #bbbbbb;
+  color: #000000;
   background-color: #ffffff; }
 
 .form-control-file,

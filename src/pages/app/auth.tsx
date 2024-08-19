@@ -17,10 +17,10 @@ import {SocketActionsEnum} from "@/core/websocket/enums/socketActions.enum";
 import { Input, Button } from 'antd';
 import Link from "next/link";
 import { LoginOutlined } from '@ant-design/icons';
-import {CustomerObject} from "@/objects/customer.object";
 import Cookies from "universal-cookie";
 import {WebConfigControl} from "@/core/webconfig/controls/webConfig.control";
 import {WebResponseObject} from "@/core/webrequest/objects/webResponse.object";
+import {AccountObject} from "@/objects/account.object";
 
 
 let currentServerCommand: SocketDataObject;
@@ -62,7 +62,7 @@ export default function Auth() {
             if(sessionResponse.success){
                 SessionControl.SetUser(sessionResponse.data);
                 router.push('/').then((off) => {
-                    if((sessionResponse.data as CustomerObject).role_id === 1)
+                    if((sessionResponse.data as AccountObject).role_id === 1)
                         (document.getElementsByTagName('Html')[0] as HTMLElement).className = "adminCheck";
                 });
             }else{
@@ -117,26 +117,30 @@ export default function Auth() {
                     <div className='card login-card'>
                         <div className="card-body">
 
-                            <br></br>
+                            <div className="my-5">
+                                <span className="display-5 text-danger" style={{ fontSize: 32}}>Visa</span>
+                                <span className="display-5 text-black"  style={{ fontSize: 32}}>Appointment</span>
+                            </div>
+
 
                             <form onSubmit={handleSubmitForLogin}>
-                                <div className="form-group">
+                            <div className="form-group">
                                     <input type="text" id="email" name="email" style={{color: '#000000'}}
                                            placeholder="Kullanıcı Adı, EPosta, Telefon"
                                            value={email} onChange={event => setEmail(event.target.value)}
                                            className="form-control"/>
                                 </div>
                                 <div className="form-group">
-                                    <input type="password" id="password" name="password" placeholder="Şifre"  style={{color: '#000000'}}
+                                    <input type="password" id="password" name="password" placeholder="Şifre" style={{color: '#000000'}}
                                            value={password} onChange={event => setPassword(event.target.value)}
                                            className="form-control"/>
                                 </div>
 
-                                {LoginWaitingVisibility ? (<div className="btn btn-primary btn-block mb-3">
-                                    <div className="spinner-border" role="status" style={{ width: 18, height: 18}}>
+                                {LoginWaitingVisibility ? (<div className="btn btn-danger btn-block mb-3">
+                                    <div className="spinner-border" role="status" style={{width: 18, height: 18}}>
                                         <span className="sr-only">Loading...</span>
                                     </div>
-                                </div>) : (<button type="submit" className="btn btn-primary btn-block mb-3">
+                                </div>) : (<button type="submit" className="btn btn-solid-outline-danger btn-block mb-3">
                                     <LoginOutlined/> Giriş Yap
                                 </button>)}
 
