@@ -19,7 +19,7 @@ const links = [
             { key: 'pg64', name: 'Site Hesapları', href: '/panel/settings/siteaccounts', icon: 'mdi mdi-account-circle' },
             { key: 'pg61', name: 'Genel Ayarları', href: '/panel/settings/general', icon: 'mdi mdi-settings' },
             { key: 'pg62', name: 'Proxy Ayarları', href: '/panel/settings/proxy', icon: 'mdi mdi-shape-outline' },
-            { key: 'pg63', name: 'Sistem Kullanıcıları', href: '/panel/settings/accounts', icon: 'mdi mdi-account' },
+            // { key: 'pg63', name: 'Sistem Kullanıcıları', href: '/panel/settings/accounts', icon: 'mdi mdi-account' },
         ]
     },
 ];

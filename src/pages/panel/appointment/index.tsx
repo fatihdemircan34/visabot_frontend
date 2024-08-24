@@ -55,16 +55,7 @@ export default function AppointmentIndex(){
     }
 
     function CountryForm(props: {CurrentCountry: number}){
-        let steps: CountryStepsInterface|undefined = undefined;
-
-        switch (props.CurrentCountry){
-            case CountryEnum.CzechRepublic: steps = new CzechiaForm(); break;
-            case CountryEnum.Estonia: steps = new EstoniaForm(); break;
-            case CountryEnum.France: steps = new FranceForm(); break;
-            case CountryEnum.Netherlands: steps = new NetherlandsForm(); break;
-            case CountryEnum.Italy: steps = new ItalyForm(); break;
-            case CountryEnum.Bulgaria: steps = new BulgariaForm(); break;
-        }
+        let steps: CountryStepsInterface|undefined = VisaForm(CurrentCountry);
 
         if(steps != undefined)
             return (<FormRenderer Steps={steps.Steps} FormSave={Save}/>);
@@ -73,13 +64,28 @@ export default function AppointmentIndex(){
     }
 
 
+    function VisaForm(CurrentCountry: number){
+        switch (CurrentCountry){
+            case CountryEnum.CzechRepublic: return new CzechiaForm();
+            case CountryEnum.Estonia: return new EstoniaForm();
+            case CountryEnum.France: return  new FranceForm();
+            case CountryEnum.Netherlands: return new NetherlandsForm();
+            case CountryEnum.Italy: return new ItalyForm();
+            case CountryEnum.Bulgaria: return new BulgariaForm();
+        }
+    }
+
+
 
 
     const Save = async (formData: Record<string, any>) => {
 
+        let steps: CountryStepsInterface|undefined = VisaForm(CurrentCountry);
+
         formData = {
             ...formData,
-            ...FormSerializerControl("AppointmentForm")
+            ...FormSerializerControl("AppointmentForm"),
+            visa_form: steps?.Steps
         }
 
         const saveReq = await ApiPost('/admin/appointment/save', formData);

@@ -1,19 +1,19 @@
-import {CustomerObject} from "@/objects/customer.object";
 import {GetCookie, SetCookie} from "@/core/webcookie/controls/cookieClient.control";
 import type {NextRequest, NextResponse} from "next/server";
 // import Cookies from "universal-cookie";
 import Cookies from "js-cookie";
+import {AccountObject} from "@/objects/account.object";
 
 export class SessionControl{
 
 
-    static User: () => (undefined | CustomerObject) = () => {
+    static User: () => (undefined | AccountObject) = () => {
         try {
             const session = GetCookie('session')
             if(session === undefined)
                 return undefined;
 
-            const user: CustomerObject = JSON.parse(SessionControl.Decode(session));
+            const user: AccountObject = JSON.parse(SessionControl.Decode(session));
             return user;
         }catch (e) {
             // if(e instanceof Error)
@@ -27,7 +27,7 @@ export class SessionControl{
 
 
 
-    static SetUser(user: CustomerObject, response?: NextResponse){
+    static SetUser(user: AccountObject, response?: NextResponse){
         SetCookie("session", SessionControl.Encode(JSON.stringify(user)), response);
     }
 

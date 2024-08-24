@@ -1,48 +1,41 @@
 import Prompt from "@/pages/app/components/prompt";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ApiGet, ApiPost} from "@/core/webrequest/controls/webRequest.control";
 import {FormSerializerControl} from "@/core/webrequest/controls/formSerializer.control";
 import Head from "next/head";
+import {EnumObject} from "@/objects/enum.object";
+import {SiteAccountObject} from "@/objects/siteAccount.object";
 
 
-let UserListData: UserObject[];
-let CurrentUserId: string;
-export interface UserObject {
-    id: number;
-    username: string;
-    password: string;
-    country: string;
-}
-const  countries = [
-    { id: 1, name: 'CzechRepublic' },
-    { id: 2, name: 'Estonia' },
-    { id: 3, name: 'France' },
-    { id: 4, name: 'Netherlands' },
-    { id: 5, name: 'Italy' },
-    { id: 6, name: 'Bulgaria' }
-];
+let UserListData: SiteAccountObject[];
+let CountryListData: EnumObject[];
+let DeleteCountryKey: number;
 
-function getCountryNameById(id: number): string | undefined {
-    const country = countries.find(c => c.id === id);
-    return country ? country.name : undefined;
-}
+
+
+
 
 export default function UserAccounts() {
 
     const iPrompt = Prompt();
 
-    let UserData: UserObject[],
-        setUserData: (value: (((prevState: UserObject[]) => UserObject[]) | UserObject[])) => void;
-    [UserData, setUserData] = useState<UserObject[]>([]) ;
+    let UserData: SiteAccountObject[],
+        setUserData: (value: (((prevState: SiteAccountObject[]) => SiteAccountObject[]) | SiteAccountObject[])) => void;
+    [UserData, setUserData] = useState<SiteAccountObject[]>([]) ;
 
-    const [SelectedCountry,   setSelectedCountry] = useState<number>(0);
+
+
+    const [CountryData, setCountryData] = useState<EnumObject[]>([]);
+    const [CurrentCountry, setCurrentCountry] = useState<number>(0);
+
 
     useEffect(() => {
         GetUsers();
+        GetCounties();
     }, []);
 
     const GetUsers = async () => {
-        const usersReq = await ApiGet('/admin/users/list');
+        const usersReq = await ApiGet('/admin/siteaccount/list');
         if (!usersReq.success) {
             iPrompt.MessageBoxShow("Hata", usersReq.message || "Bilinmeyen bir hata oluştu!");
             return;
@@ -51,10 +44,26 @@ export default function UserAccounts() {
         setUserData(UserListData);
     }
 
+    async function GetCounties(){
+        const resp = await ApiGet('/admin/appointment/countries');
+        if (!resp.success) {
+            iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
+            return;
+        }
+        setCountryData(resp.data);
+        CountryListData = resp.data;
+    }
+
+    function getCountryNameById(key: number){
+        return CountryListData.find(t => t.key == key)?.code;
+    }
+
+
+
     const SaveUser = async () => {
         console.log(FormSerializerControl("UserForm"));
 
-        const saveReq = await ApiPost('/admin/users/save', FormSerializerControl("UserForm"));
+        const saveReq = await ApiPost('/admin/siteaccount/save', FormSerializerControl("UserForm"));
         if (!saveReq.success) {
             iPrompt.MessageBoxShow("Hata", saveReq.message || "Bilinmeyen bir hata oluştu!");
             return;
@@ -64,15 +73,15 @@ export default function UserAccounts() {
         ClearUser();
     }
 
-    function DeleteUserRequest(userId: string) {
-        CurrentUserId = userId;
+    function DeleteUserRequest(country: number) {
+        DeleteCountryKey = country;
         iPrompt.ConfirmBoxShow("Kullanıcı Silme", "Kullanıcı bilgisi sistemden silinecektir. Onaylıyor musunuz?");
     }
 
     const DeleteUser = async (isOkay: boolean) => {
         if (!isOkay) return;
 
-        const deleteReq = await ApiPost('/admin/users/delete', { name: CurrentUserId });
+        const deleteReq = await ApiPost('/admin/siteaccount/delete', { country: DeleteCountryKey });
         if (!deleteReq.success) {
             iPrompt.MessageBoxShow("Hata", deleteReq.message || "Bilinmeyen bir hata oluştu!");
             return;
@@ -82,39 +91,37 @@ export default function UserAccounts() {
         ClearUser();
     }
 
-    const SelectUser = (user: UserObject) => {
+    const SelectUser = (user: SiteAccountObject) => {
        // (document.getElementById('hdnId') as HTMLInputElement).value = user.id.toString();
         (document.getElementById('txtUsername') as HTMLInputElement).value = user.username;
         (document.getElementById('txtPassword') as HTMLInputElement).value = user.password;
-        setSelectedCountry(parseInt(user.country));
+        setCurrentCountry(user.country);
     }
 
     function ClearUser() {
         (document.getElementById('hdnId') as HTMLInputElement).value = "0";
         (document.getElementById('txtUsername') as HTMLInputElement).value = "";
         (document.getElementById('txtPassword') as HTMLInputElement).value = "";
-        setSelectedCountry(0);
+        setCurrentCountry(0);
     }
 
-    function UserItem(item: UserObject) {
+    function UserItem(item: SiteAccountObject) {
 
-        return (
-            <tr key={item.id}>
+        return (<tr key={item.id}>
+                <td>{getCountryNameById(item.country)}</td>
                 <td>{item.username}</td>
                 <td>{item.password}</td>
+            <td>
+                <button className="btn btn-sm btn-pill btn-success py-1 mx-1" onClick={() => SelectUser(item)}>Düzenle
+                </button>
+                <button className="btn btn-sm btn-pill btn-danger py-1" onClick={() => DeleteUserRequest(item.country)}>Sil
+                </button>
 
-                <td>{getCountryNameById(parseInt(item.country))}</td>
-                <td>
-                    <button className="btn btn-sm btn-pill btn-success" style={{paddingTop: 4, paddingBottom: 4}}    onClick={() => SelectUser(item)}>Düzenle
-                    </button>
-
-                </td>
-            </tr>
-        );
+            </td>
+        </tr>);
     }
 
-    return (
-        <>
+    return (<>
             <Head>
                 <title>Kullanıcı Ayarları - Visa Appointment Engine</title>
             </Head>
@@ -148,18 +155,9 @@ export default function UserAccounts() {
                         <div className="col-4">
                             <div className="form-group">
                                 <label htmlFor="slcCountry">Ülke</label>
-                                <select name="country" className="form-select form-control" id="slcCountry"
-                                        value={SelectedCountry}
-                                        onChange={(e) => setSelectedCountry(parseInt(e.target.value))}
-                                        style={{color: '#000000'}}>
-                                    <option id="country_0" value="0" disabled>Başlamak için lütfen ülke seçiniz!
-                                    </option>
-                                    <option id="country_1" value="1">CzechRepublic</option>
-                                    <option id="country_2" value="2">Estonia</option>
-                                    <option id="country_3" value="3">France</option>
-                                    <option id="country_4" value="4">Netherlands</option>
-                                    <option id="country_5" value="5">Italy</option>
-                                    <option id="country_6" value="6">Bulgaria</option>
+                                <select name="country" style={{color: '#000000'}} className="form-select form-control" value={CurrentCountry} onChange={(e) => setCurrentCountry(Number(e.target.value))}>
+                                    <option key="0" id={`country_0`} value="0" selected={true} disabled={true}>Başlamak için lütfen ülke seçiniz!</option>
+                                    {(CountryData?.length || 0) <= 0 ? (<></>) : CountryData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key}>{t.code}</option>)}
                                 </select>
                                 <small id="txtCountryHelp" className="form-text text-black">Kullanıcının ülkesi</small>
                             </div>
@@ -172,7 +170,7 @@ export default function UserAccounts() {
 
                 <div className="row m-5">
                     <div className="col-12">
-                        <hr />
+                        <hr/>
                     </div>
                 </div>
 
@@ -187,13 +185,13 @@ export default function UserAccounts() {
                         <thead>
                         <tr>
                             <th style={{width: 200}}>
+                                Ülke
+                            </th>
+                            <th style={{width: 200}}>
                                 Kullanıcı Adı
                             </th>
                             <th style={{width: 200}}>
                                 Şifre
-                            </th>
-                            <th style={{width: 200}}>
-                                Ülke
                             </th>
                             <th style={{width: 200}}>
                                 İşlem

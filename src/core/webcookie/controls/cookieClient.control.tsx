@@ -17,7 +17,7 @@ export function GetCookie(name:string, request?: NextRequest) {
     if (request == undefined) {
         return GetDocCookie(name);
     }else{
-        return request.cookies.get(name)?.value;
+        return request?.cookies?.get(name)?.value ?? "";
     }
 }
 

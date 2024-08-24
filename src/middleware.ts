@@ -12,9 +12,15 @@ export async function middleware(request: NextRequest) {
     try {
 
         const response = NextResponse.next();
-        console.log(`Request is undefined: ${request == undefined}`)
+        console.log(`Request is undefined: ${request == undefined}`);
 
-        const sessionResponse = await ApiGet('/profile/session', GetCookie("uuid", request), GetCookie("ssid",request));
+
+        const currentUUID = GetCookie("uuid", request);
+        const currentSSID = GetCookie("ssid",request);
+        const apiUrl = request != undefined ? 'http://localhost:4010/api/v1' : "";
+
+        console.log(`ApiGet Running... currentUUID: ${currentUUID} / currentSSID: ${currentSSID}`);
+        const sessionResponse = await ApiGet('/profile/session',currentUUID ,currentSSID, apiUrl);
         console.log(`CheckSession => ${JSON.stringify(sessionResponse)}`);
 
         let user:AccountObject;

@@ -5,4 +5,5 @@ export class SettingsObject {
    card_month!: string;
    card_year!: string;
    card_vcc!: string;
+   external_api_key!: string;
 }

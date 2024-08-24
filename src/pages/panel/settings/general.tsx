@@ -22,6 +22,7 @@ export default function General() {
         if ((document.getElementById('card_month') as HTMLInputElement) !== undefined) (document.getElementById('card_month') as HTMLInputElement).value = String(settings?.card_month ?? "");
         if ((document.getElementById('card_year') as HTMLInputElement) !== undefined) (document.getElementById('card_year') as HTMLInputElement).value = String(settings?.card_year ?? "");
         if ((document.getElementById('card_vcc') as HTMLInputElement) !== undefined) (document.getElementById('card_vcc') as HTMLInputElement).value = String(settings?.card_vcc ?? "");
+        if ((document.getElementById('external_api_key') as HTMLInputElement) !== undefined) (document.getElementById('external_api_key') as HTMLInputElement).value = String(settings?.external_api_key ?? "");
 
     }
 
@@ -52,6 +53,24 @@ export default function General() {
     }
 
 
+    function getRandom(length: number) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const charactersLength = characters.length;
+        let counter = 0;
+        while (counter < length) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            counter += 1;
+        }
+        return result;
+    }
+
+
+    const GenerateApiKey = async () => {
+        if(document.getElementById('external_api_key') != undefined)
+            (document.getElementById('external_api_key') as HTMLInputElement).value = getRandom(30);
+    }
+
     return (<>
         <Head>
             <title>Genel Ayarlar - Visa Appointment Engine</title>
@@ -66,7 +85,37 @@ export default function General() {
                 </div>
             </div>
 
+
             <form id="SettingsForm">
+                <div className="row mt-5">
+                    <div className="col-12">
+                        <h6>Robot Bağlantı Keyi</h6>
+                        <hr/>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12 col-md-12 col-xl-6">
+                        <div className="form-group">
+                            <label htmlFor="external_api_key">Api Key</label>
+                            <div>
+
+
+                            </div>
+                            <div className="input-group">
+                                <input type="text" name="external_api_key" className="form-control" id="external_api_key" aria-describedby="txtProxyInfo" placeholder="Key" style={{color: '#000000'}}/>
+                                <span className="input-group-btn">
+                                <button type="button" className="btn btn-soft-secondary" onClick={() => GenerateApiKey()}>
+                                     <i className="mdi mdi-coffee-maker"></i>
+                                    Oluştur
+                                </button>
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-4">
+
+                    </div>
+                </div>
 
 
                 <div className="row mt-5">

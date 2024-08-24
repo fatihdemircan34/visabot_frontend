@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "export NEXT_PUBLIC_NODE_ENV=development && next dev -p 3321",
-    "stage": "export NEXT_PUBLIC_NODE_ENV=stage && next dev -p 3351",
+    "dev": "export NEXT_PUBLIC_NODE_ENV=development && next dev -p 4011",
+    "stage": "export NEXT_PUBLIC_NODE_ENV=stage && next dev -p 4011",
     "build": "next build",
-    "start": "export NEXT_PUBLIC_NODE_ENV=production && next start -p 3301",
+    "start": "export NEXT_PUBLIC_NODE_ENV=production && next start -p 4011",
     "lint": "next lint"
   },
   "dependencies": {

@@ -10,6 +10,8 @@ export const BackendApi = "/api/v1";
 export const WebRequestControl =  async(requestType: RequestTypeEnum, path: string, payload: any = undefined, uuid: string = "", ssid: string = "", apiUrl: string = "") => {
 
     try {
+        console.log("WebRequestControl Running...");
+
         if(uuid === "")
             uuid = GetCookie('uuid') ?? "";
 
@@ -17,10 +19,12 @@ export const WebRequestControl =  async(requestType: RequestTypeEnum, path: stri
             ssid = GetCookie('ssid') ?? "";        
         
 
+        console.log("WebRequestControl Running...");
         console.log(`Request Type: ${requestType} - Path: ${path} - Payload: ${JSON.stringify(payload)} - UUID: ${uuid} - SSID: ${ssid} - ApiUrl: ${apiUrl}`);
         
 
         const url = apiUrl === "" ? `${WebConfigControl.ApiUrl()}${BackendApi}${path}` : `${apiUrl}${path}`;
+        console.log(`WebRequestControl Url: ${url}`);
         const method = requestType === RequestTypeEnum.Post ? "POST" : "GET";
         const headers = {
             'x-uuid': uuid,
@@ -52,6 +56,9 @@ export const WebRequestControl =  async(requestType: RequestTypeEnum, path: stri
         return result;
     }
     catch (e) {
+
+        console.log(`Request Error: ${e}`);
+
         const result = new WebResponseObject();
         result.success = false;
 
@@ -67,7 +74,10 @@ export const WebRequestControl =  async(requestType: RequestTypeEnum, path: stri
 
 
 export const ApiPost = async(path: string, payload: any, uuid: string = "", ssid: string = "", apiUrl: string = "") => await WebRequestControl(RequestTypeEnum.Post, path, payload, uuid, ssid, apiUrl);
-export const ApiGet = async(path: string, uuid: string = "", ssid: string = "", apiUrl: string = "") => await WebRequestControl(RequestTypeEnum.Get, path, undefined, uuid, ssid, apiUrl);
+export const ApiGet = async(path: string, uuid: string = "", ssid: string = "", apiUrl: string = "") => {
+    console.log(">>> In Api Get");
+    return await WebRequestControl(RequestTypeEnum.Get, path, undefined, uuid, ssid, apiUrl);
+}
 
 
 
