@@ -13,7 +13,7 @@ export function FormSerializerControl(formElementId: string) {
 
         let field = form.elements[i] as HTMLInputElement | HTMLSelectElement;
 
-        if (!field.name || field.disabled || field.type === 'file' || field.type === 'reset' || field.type === 'submit' || field.type === 'button') continue;
+        if (!field.name || field.type === 'file' || field.type === 'reset' || field.type === 'submit' || field.type === 'button') continue;
 
         if (field instanceof HTMLSelectElement) {
             if (field.type === 'select-multiple') {

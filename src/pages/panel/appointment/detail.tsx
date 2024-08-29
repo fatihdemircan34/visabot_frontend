@@ -52,14 +52,26 @@ const Detail = (props: DetailProps) => {
             return (<></>);
     }
 
-
+    function VisaForm(CurrentCountry: number){
+        switch (CurrentCountry){
+            case CountryEnum.CzechRepublic: return new CzechiaForm();
+            case CountryEnum.Estonia: return new EstoniaForm();
+            case CountryEnum.France: return  new FranceForm();
+            case CountryEnum.Netherlands: return new NetherlandsForm();
+            case CountryEnum.Italy: return new ItalyForm();
+            case CountryEnum.Bulgaria: return new BulgariaForm();
+        }
+    }
 
 
     const Save = async (formData: Record<string, any>) => {
 
+        let steps: CountryStepsInterface|undefined = VisaForm(CurrentCountry);
+
         formData = {
             ...formData,
-            ...FormSerializerControl("AppointmentDetailForm")
+            ...FormSerializerControl("AppointmentDetailForm"),
+            visa_form: steps?.Steps
         }
 
         const saveReq = await ApiPost('/admin/appointment/save', formData);
@@ -92,15 +104,15 @@ const Detail = (props: DetailProps) => {
 
         <form id="AppointmentDetailForm" className="mt-3">
 
-            <input type="hidden" name="key"/>
+            <input type="hidden" name="key" value={app.key}/>
 
             <div className="row d-flex justify-content-center">
 
                 <div className="col-6">
                     <div className="form-group">
                         <label className="h6">Başvuru Ülkesi</label>
-                        <select name="country" disabled={true} style={{color: '#000000'}} className="form-select form-control" value={app.country}>
-                            {(CountryData?.length || 0) <= 0 ? (<></>) : CountryData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key}>{t.code}</option>)}
+                        <select name="country" disabled={true} style={{color: '#000000'}} className="form-select form-control">
+                            {(CountryData?.length || 0) <= 0 ? (<></>) : CountryData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key} selected={app.country == t.key}>{t.code}</option>)}
                         </select>
                     </div>
                 </div>
@@ -109,7 +121,6 @@ const Detail = (props: DetailProps) => {
                     <div className="form-group">
                         <label className="h6">Durumu</label>
                         <select name="status" disabled={app.status >= AppointmentStatusEnum.InProgress} style={{color: '#000000'}} className="form-select form-control">
-                            <option value="-1">Tümü</option>
                             {(StatusData?.length || 0) <= 0 ? (<></>) : StatusData.map(t => <option key={t.key} id={`status_${t.key}`} value={t.key} selected={app.status == t.key}>{t.code}</option>)}
                         </select>
                     </div>
