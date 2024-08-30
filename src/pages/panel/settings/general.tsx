@@ -23,6 +23,7 @@ export default function General() {
         if ((document.getElementById('card_year') as HTMLInputElement) !== undefined) (document.getElementById('card_year') as HTMLInputElement).value = String(settings?.card_year ?? "");
         if ((document.getElementById('card_vcc') as HTMLInputElement) !== undefined) (document.getElementById('card_vcc') as HTMLInputElement).value = String(settings?.card_vcc ?? "");
         if ((document.getElementById('external_api_key') as HTMLInputElement) !== undefined) (document.getElementById('external_api_key') as HTMLInputElement).value = String(settings?.external_api_key ?? "");
+        if ((document.getElementById('robot_count') as HTMLInputElement) !== undefined) (document.getElementById('robot_count') as HTMLInputElement).value = String(settings?.robot_count ?? "");
 
     }
 
@@ -87,6 +88,7 @@ export default function General() {
 
 
             <form id="SettingsForm">
+
                 <div className="row mt-5">
                     <div className="col-12">
                         <h6>Robot Bağlantı Keyi</h6>
@@ -97,10 +99,6 @@ export default function General() {
                     <div className="col-12 col-md-12 col-xl-6">
                         <div className="form-group">
                             <label htmlFor="external_api_key">Api Key</label>
-                            <div>
-
-
-                            </div>
                             <div className="input-group">
                                 <input type="text" name="external_api_key" className="form-control" id="external_api_key" aria-describedby="txtProxyInfo" placeholder="Key" style={{color: '#000000'}}/>
                                 <span className="input-group-btn">
@@ -110,6 +108,25 @@ export default function General() {
                                 </button>
                               </span>
                             </div>
+                        </div>
+                    </div>
+                    <div className="col-4">
+
+                    </div>
+                </div>
+
+
+                <div className="row mt-5">
+                    <div className="col-12">
+                        <h6>Aktif Robot Sayısı</h6>
+                        <hr/>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12 col-md-12 col-xl-6">
+                        <div className="form-group">
+                            <label htmlFor="robot_count">Sunucu Başına Aktif Robot Sayısı</label>
+                            <input type="text" name="robot_count" className="form-control" id="robot_count" aria-describedby="robot_count" style={{color: '#000000'}}/>
                         </div>
                     </div>
                     <div className="col-4">

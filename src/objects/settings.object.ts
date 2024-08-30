@@ -6,4 +6,5 @@ export class SettingsObject {
    card_year!: string;
    card_vcc!: string;
    external_api_key!: string;
+   robot_count!: number
 }
