@@ -57,8 +57,8 @@ export class CzechiaForm implements CountryStepsInterface{
                     placeholder: 'Uyruk Seçiniz',
                     selector: '#mat-select-6',
                     options: [
-                        { value: 'turkish', label: 'Türk' },
-                        { value: 'german', label: 'Alman' },
+                        { value: 'Türkiye', label: 'Türkiye' },
+                        { value: 'Polonya', label: 'Polonya' },
                         // Diğer seçenekler
                     ],
                 },
