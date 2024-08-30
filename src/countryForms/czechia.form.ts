@@ -69,6 +69,32 @@ export class CzechiaForm implements CountryStepsInterface{
                 { type: 'button', name: '', label: 'Kaydet', placeholder: '', selector: '' },
             ],
         },
-        // Diğer adımlar benzer şekilde eklenebilir
+        {
+             content: [
+                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '' },
+             ],
+         },
+         {
+             content: [
+                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '' },
+             ],
+         },
+         {
+             content: [
+                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '' },
+             ],
+         },
+         {
+             content: [
+                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '#mat-checkbox-1' },
+                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '#mat-checkbox-2' },
+                 { type: 'button', name: '', label: 'Online Öde', placeholder: '', selector: '' },
+             ],
+         },
+         {
+             content: [
+                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '' },
+             ],
+         },
     ];
 }
