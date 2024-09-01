@@ -24,6 +24,9 @@ export default function General() {
         if ((document.getElementById('card_vcc') as HTMLInputElement) !== undefined) (document.getElementById('card_vcc') as HTMLInputElement).value = String(settings?.card_vcc ?? "");
         if ((document.getElementById('external_api_key') as HTMLInputElement) !== undefined) (document.getElementById('external_api_key') as HTMLInputElement).value = String(settings?.external_api_key ?? "");
         if ((document.getElementById('robot_count') as HTMLInputElement) !== undefined) (document.getElementById('robot_count') as HTMLInputElement).value = String(settings?.robot_count ?? "");
+        if ((document.getElementById('invoice_name') as HTMLInputElement) !== undefined) (document.getElementById('invoice_name') as HTMLInputElement).value = String(settings?.invoice_name ?? "");
+        if ((document.getElementById('invoice_addr') as HTMLInputElement) !== undefined) (document.getElementById('invoice_addr') as HTMLInputElement).value = String(settings?.invoice_addr ?? "");
+        if ((document.getElementById('invoice_addr2') as HTMLInputElement) !== undefined) (document.getElementById('invoice_addr2') as HTMLInputElement).value = String(settings?.invoice_addr2 ?? "");
 
     }
 
@@ -137,7 +140,7 @@ export default function General() {
 
                 <div className="row mt-5">
                     <div className="col-12">
-                        <h6>Kredi Kartı</h6>
+                        <h6>Kredi Kartı ve Ödeme Bilgileri</h6>
                         <hr/>
                     </div>
                 </div>
@@ -177,6 +180,31 @@ export default function General() {
                         </div>
                     </div>
                 </div>
+                <div className="row">
+                    <div className="col-6">
+                        <div className="form-group">
+                            <label htmlFor="invoice_name">Fatura İsim Soyisim</label>
+                            <input type="text" name="invoice_name" className="form-control" id="invoice_name" aria-describedby="invoice_name" style={{color: '#000000'}}/>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-6">
+                        <div className="form-group">
+                            <label htmlFor="invoice_addr">Fatura Adres 1</label>
+                            <input type="text" name="invoice_addr" className="form-control" id="invoice_addr" aria-describedby="invoice_addr" style={{color: '#000000'}}/>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-6">
+                        <div className="form-group">
+                            <label htmlFor="invoice_addr2">Fatura Adres 2</label>
+                            <input type="text" name="invoice_addr2" className="form-control" id="invoice_addr2" aria-describedby="invoice_addr2" style={{color: '#000000'}}/>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="row mt-5">
                     <div className="col-12">
                         <button onClick={() => saveSettings()} type="button" className="btn btn-danger btn-pill">Kaydet</button>

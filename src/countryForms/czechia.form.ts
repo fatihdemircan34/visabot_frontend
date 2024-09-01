@@ -3,6 +3,7 @@ import {CountryStepsInterface} from "@/interfaces/countrySteps.interface";
 export class CzechiaForm implements CountryStepsInterface{
      Steps = [
         {
+            step_link: '',
             content: [
                 {
                     type: 'select',
@@ -10,6 +11,7 @@ export class CzechiaForm implements CountryStepsInterface{
                     label: 'Vize Başvuru Merkezinizi Seçiniz',
                     placeholder: 'Vize Başvuru Merkezinizi Seçiniz',
                     selector: '#mat-select-0',
+                    is_double_action: 0,
                     options: [
                         { value: 'ANKARA', label: 'Czech Republic Visa Application Centre - Ankara' },
                         { value: 'CR-ANT', label: 'Czech Republic Visa Application Centre - Antalya' },
@@ -23,6 +25,7 @@ export class CzechiaForm implements CountryStepsInterface{
                     label: 'Başvuru Kategorinizi Seçiniz',
                     placeholder: 'Başvuru Kategorinizi Seçiniz',
                     selector: '#mat-select-4',
+                    is_double_action: 0,
                     options: [
                         { value: 'short-term', label: 'KISA DONEM VIZE BASVURUSU / SHORT TERM VISA APPLICATION' },
                     ],
@@ -33,6 +36,7 @@ export class CzechiaForm implements CountryStepsInterface{
                     label: 'Alt Kategorinizi Seçiniz',
                     placeholder: 'Alt Kategorinizi Seçiniz',
                     selector: '#mat-select-2',
+                    is_double_action: 0,
                     options: [
                         { value: 'NEWREQUESTFAMILYVISIT', label: 'AILE ARKADAS ZIYARETI VIZE BASVURUSU / FAMILY FRIEND VISIT VISA APPLICATION' },
                         { value: 'COVID', label: 'EU Family Members - AB Vatandaslari' },
@@ -43,57 +47,64 @@ export class CzechiaForm implements CountryStepsInterface{
                         { value: 'NEWREQUESTTOURISM', label: 'TURIZM VIZE BASVURUSU / TOURISM VISA APPLICATION' },
                     ],
                 },
-                { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '' },
+                { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '' , is_double_action: 0},
             ],
         },
         {
+            step_link: '',
             content: [
-                { type: 'text', name: 'firstName', label: 'İsminizi Giriniz', placeholder: 'İsminizi Giriniz', selector: '#mat-input-5', },
-                { type: 'text', name: 'lastName', label: 'Soyisminizi Giriniz', placeholder: 'Soyisminizi Giriniz', selector: '#mat-input-6', },
+                { type: 'text', name: 'firstName', label: 'İsminizi Giriniz', placeholder: 'İsminizi Giriniz', selector: '#mat-input-5', is_double_action: 0 },
+                { type: 'text', name: 'lastName', label: 'Soyisminizi Giriniz', placeholder: 'Soyisminizi Giriniz', selector: '#mat-input-6', is_double_action: 0 },
                 {
                     type: 'select',
                     name: 'nationality',
                     label: 'Uyruk Seçiniz',
                     placeholder: 'Uyruk Seçiniz',
                     selector: '#mat-select-6',
+                    is_double_action: 0,
                     options: [
                         { value: 'Türkiye', label: 'Türkiye' },
                         { value: 'Polonya', label: 'Polonya' },
                         // Diğer seçenekler
                     ],
                 },
-                { type: 'text', name: 'passportNumber', label: 'Pasaport Numarası Giriniz', placeholder: 'Pasaport Numarası Giriniz', selector: '#mat-input-7' },
-                { type: 'text', name: 'countryCode', label: 'Alan Kodu', placeholder: 'İletişim Numarası Alan Kodunu Giriniz', selector: '#mat-input-8' },
-                { type: 'text', name: 'contactNumber', label: 'İletişim Numarası Giriniz', placeholder: 'İletişim Numarası Giriniz', selector: '#mat-input-9' },
-                { type: 'email', name: 'email', label: 'E-posta Giriniz', placeholder: 'E-posta Giriniz', selector: '#mat-input-10' },
-                { type: 'button', name: '', label: 'Kaydet', placeholder: '', selector: '' },
+                { type: 'text', name: 'passportNumber', label: 'Pasaport Numarası Giriniz', placeholder: 'Pasaport Numarası Giriniz', selector: '#mat-input-7', is_double_action: 0 },
+                { type: 'text', name: 'countryCode', label: 'Alan Kodu', placeholder: 'İletişim Numarası Alan Kodunu Giriniz', selector: '#mat-input-8', is_double_action: 0 },
+                { type: 'text', name: 'contactNumber', label: 'İletişim Numarası Giriniz', placeholder: 'İletişim Numarası Giriniz', selector: '#mat-input-9',  is_double_action: 0 },
+                { type: 'email', name: 'email', label: 'E-posta Giriniz', placeholder: 'E-posta Giriniz', selector: '#mat-input-10',  is_double_action: 0 },
+                { type: 'button', name: '', label: 'Kaydet', placeholder: '', selector: '.btn-brand-orange.mat-btn-lg:nth-of-type(1)',  is_double_action: 0 },
             ],
         },
         {
+            step_link: '',
+            content: [
+                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '',  is_double_action: 0 },
+            ],
+         },
+         {
+             step_link: '',
              content: [
-                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '' },
+                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '', is_double_action: 0 },
              ],
          },
          {
+             step_link: '',
              content: [
-                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '' },
+                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '', is_double_action: 0 },
              ],
          },
          {
+             step_link: '',
              content: [
-                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '' },
+                 { type: 'mat-checkbox', name: '', label: 'Devam Et', placeholder: '', selector: '#mat-checkbox-1', is_double_action: 0 },
+                 { type: 'mat-checkbox', name: '', label: 'Devam Et', placeholder: '', selector: '#mat-checkbox-2', is_double_action: 0 },
+                 { type: 'button', name: '', label: 'Online Öde', placeholder: '', selector: '', is_double_action: 0 },
              ],
          },
          {
+             step_link: '',
              content: [
-                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '#mat-checkbox-1' },
-                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '#mat-checkbox-2' },
-                 { type: 'button', name: '', label: 'Online Öde', placeholder: '', selector: '' },
-             ],
-         },
-         {
-             content: [
-                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '' },
+                 { type: 'button', name: '', label: 'Devam Et', placeholder: '', selector: '', is_double_action: 0 },
              ],
          },
     ];

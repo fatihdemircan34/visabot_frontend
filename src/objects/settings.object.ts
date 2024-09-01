@@ -6,5 +6,8 @@ export class SettingsObject {
    card_year!: string;
    card_vcc!: string;
    external_api_key!: string;
-   robot_count!: number
+   robot_count!: number;
+   invoice_name!: string;
+   invoice_addr!: string;
+   invoice_addr2!: string;
 }
