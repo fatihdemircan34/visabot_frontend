@@ -3,6 +3,7 @@
 import '@/styles/import.scss'
 import '@/stylesadmin/import.scss'
 
+
 import type {AppProps} from "next/app";
 import Layout from "./app/layout";
 import Transition from "@/pages/app/components/transition";

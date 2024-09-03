@@ -20,16 +20,16 @@ export function FormSerializerControl(formElementId: string) {
                 for (let n = 0; n < field.options.length; n++) {
                     if (!field.options[n].selected) continue;
                     if(isNaN(parseInt(field.options[n].value))) {
-                        serialized[encodeURIComponent(field.name)] = encodeURIComponent(parseInt(field.options[n].value));
+                        serialized[encodeURIComponent(field.name)] = parseInt(field.options[n].value);
                     } else {
-                        serialized[encodeURIComponent(field.name)] = encodeURIComponent(field.options[n].value);
+                        serialized[encodeURIComponent(field.name)] = field.options[n].value;
                     }
                 }
             } else {
                 if(!isNaN(parseInt(field.value))) {
                     serialized[encodeURIComponent(field.name)] = parseInt(field.value);
                 } else {
-                    serialized[encodeURIComponent(field.name)] = encodeURIComponent(field.value);
+                    serialized[encodeURIComponent(field.name)] = field.value;
                 }
             }
         }
@@ -40,7 +40,7 @@ export function FormSerializerControl(formElementId: string) {
                 serialized[encodeURIComponent(field.name)] = field.checked;
             }
             else{
-                serialized[encodeURIComponent(field.name)] = encodeURIComponent(field.value);
+                serialized[encodeURIComponent(field.name)] = field.value;
             }
 
         }

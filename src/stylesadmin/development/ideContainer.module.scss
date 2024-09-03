@@ -1,0 +1,26 @@
+.ideContainer {
+    display: flex;
+    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #b7b7b7;
+    color: rgb(252, 251, 251);
+}
+
+.code-file{
+    font-size: 19px;
+    display: block;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    color: #13273d;
+}
+
+.code-file.active {
+    background-color: #13273d;
+    color: white;
+}
+
+.code-file:hover{
+    background-color: #e7e7e7;
+    color: #13273d;
+}
