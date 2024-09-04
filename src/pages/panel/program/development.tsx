@@ -174,6 +174,8 @@ const Development: React.FC = () => {
         const fileElements = document.querySelectorAll('.code-file');
         fileElements.forEach((el) => el.classList.remove('active'));
         await LoadProgram(CurrentProgram)
+        setCurrentFile('');
+        setCurrentCode('');
         setIsChanged(false);
     }
 

@@ -99,6 +99,10 @@ export default function SiteAccounts() {
 
 
 
+    function NewAccount(){
+
+    }
+
 
     const columns: GridColDef[] = [
 
@@ -132,8 +136,11 @@ export default function SiteAccounts() {
 
             <div className="m-3">
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-6">
                         <h3>Hedef Site Hesapları</h3>
+                    </div>
+                    <div className="col-6">
+                        <button className="btn btn-danger float-right mb-2 mx-3" type="button" onClick={() => NewAccount()}>Yeni Kayıt</button>
                     </div>
                 </div>
                 <br></br>
