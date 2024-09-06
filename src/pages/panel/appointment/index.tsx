@@ -84,6 +84,7 @@ export default function AppointmentIndex(){
 
         iPrompt.MessageBoxShow("Başarılı", "Randevu başarılı bir şekilde oluşturuldu!");
         setCurrentProgram(0);
+        setScraper(undefined)
     }
 
 
@@ -121,7 +122,7 @@ export default function AppointmentIndex(){
                     <div className="col-4">
                         <div className="form-group">
                             <h5>Program</h5>
-                            <select name="country" style={{color: '#000000'}} className="form-select form-control" value={CurrentProgram} onChange={(e) => SetProgram(Number(e.target.value))}>
+                            <select name="program" style={{color: '#000000'}} className="form-select form-control" value={CurrentProgram} onChange={(e) => SetProgram(Number(e.target.value))}>
                                 <option key="0" id={`country_0`} value="0" selected={true} disabled={true}>Başlamak için lütfen ülke seçiniz!</option>
                                 {(ProgramData?.length || 0) <= 0 ? (<></>) : ProgramData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key}>{t.name}</option>)}
                             </select>

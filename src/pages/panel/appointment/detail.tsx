@@ -73,7 +73,7 @@ const Detail = (props: DetailProps) => {
                 <div className="col-6">
                     <div className="form-group">
                         <label className="h6">Program</label>
-                        <select name="country" disabled={true} style={{color: '#000000'}} className="form-select form-control">
+                        <select name="program" disabled={true} style={{color: '#000000'}} className="form-select form-control">
                             {(ProgramData?.length || 0) <= 0 ? (<></>) : ProgramData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key} selected={app.program == t.key}>{t.name}</option>)}
                         </select>
                     </div>

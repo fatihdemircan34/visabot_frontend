@@ -84,9 +84,7 @@ export default function List(){
     }
 
     async function GetProgram(programKey: number){
-        setIsLoading(true);
         const resp = await ApiGet(`/admin/program/scraper/${programKey}`);
-        setIsLoading(false);
         if (!resp.success) {
             iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
             return;
@@ -243,6 +241,7 @@ export default function List(){
     const columns: GridColDef[] = [
 
         { field: 'key', headerName: 'İşlem Numarası', flex: 1},
+        { field: 'program_name', headerName: 'Program', flex: 1},
         { field: 'firstName', headerName: 'İsim', flex: 1},
         { field: 'lastName', headerName: 'Soyisim', flex: 1},
         { field: 'passportNumber', headerName: 'Pasaport No', flex: 1},
