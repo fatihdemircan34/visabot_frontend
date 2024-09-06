@@ -265,8 +265,8 @@ const Development: React.FC = () => {
                             <h6>Dosya Gezini</h6>
                         </div>
                         <div className="col-6">
-                            <div className="float-right p-1" style={{cursor: "pointer"}} onClick={() => Show("Yeni dosya oluştur.")}>
-                                <i className="mdi mdi-plus-box-outline" style={{fontSize: 23}}></i>
+                            <div className="float-right" style={{cursor: "pointer", fontSize: 14}} onClick={() => Show("Yeni dosya oluştur.")}>
+                                <i className="mdi mdi-file-plus" style={{ fontSize: 16}}></i> Yeni Kod Dosyası
                             </div>
                         </div>
                         <div className="col-12">

@@ -4,24 +4,20 @@ import {ApiGet, ApiPost} from "@/core/webrequest/controls/webRequest.control";
 import {FormSerializerControl} from "@/core/webrequest/controls/formSerializer.control";
 import Head from "next/head";
 import {EnumObject} from "@/objects/enum.object";
-import {SiteAccountObject} from "@/objects/siteAccount.object";
+import {ProgramAccountObject} from "@/objects/programAccount.object";
 import RightModal from "@/controls/rightModal";
 import {GridCustomFilterModel} from "@/pages/app/components/dataGridControl";
 import DataGridComponent from "@/components/DataGrid/DataGridComponent";
 import {GridColDef, GridRenderCellParams} from "@mui/x-data-grid";
 import {AppointmentStatusEnum} from "@/enums/appointmentStatus.enum";
 import {ProgramObject} from "@/objects/program.object";
+import AccountDetail from "@/pages/panel/program/accountDetail";
 
 
-let UserListData: SiteAccountObject[];
-let CountryListData: EnumObject[];
 let DeleteCountryKey: number;
 
 
-
-
-
-export default function SiteAccounts() {
+export default function Accounts() {
 
     const rightModal: RightModal = new RightModal();
     const iPrompt = Prompt();
@@ -33,7 +29,6 @@ export default function SiteAccounts() {
 
 
     const [ProgramData, setProgramData] = useState<ProgramObject[]>([]);
-    const [CurrentProgram, setCurrentProgram] = useState<number>(0);
 
 
     useEffect(() => {
@@ -49,22 +44,9 @@ export default function SiteAccounts() {
             return;
         }
         setProgramData(resp.data);
-        CountryListData = resp.data;
     }
 
 
-
-    const SaveUser = async () => {
-        console.log(FormSerializerControl("UserForm"));
-
-        const saveReq = await ApiPost('/admin/siteaccount/save', FormSerializerControl("UserForm"));
-        if (!saveReq.success) {
-            iPrompt.MessageBoxShow("Hata", saveReq.message || "Bilinmeyen bir hata oluştu!");
-            return;
-        }
-
-        ClearUser();
-    }
 
     function DeleteUserRequest(country: number) {
         DeleteCountryKey = country;
@@ -74,34 +56,35 @@ export default function SiteAccounts() {
     const DeleteUser = async (isOkay: boolean) => {
         if (!isOkay) return;
 
-        const deleteReq = await ApiPost('/admin/siteaccount/delete', { country: DeleteCountryKey });
+        const deleteReq = await ApiPost('/admin/programaccount/delete', { country: DeleteCountryKey });
         if (!deleteReq.success) {
             iPrompt.MessageBoxShow("Hata", deleteReq.message || "Bilinmeyen bir hata oluştu!");
             return;
         }
-
-        ClearUser();
-    }
-
-    const SelectUser = (user: SiteAccountObject) => {
-       // (document.getElementById('hdnId') as HTMLInputElement).value = user.id.toString();
-        (document.getElementById('txtUsername') as HTMLInputElement).value = user.username;
-        (document.getElementById('txtPassword') as HTMLInputElement).value = user.password;
-        setCurrentProgram(user.country);
-    }
-
-    function ClearUser() {
-        (document.getElementById('hdnId') as HTMLInputElement).value = "0";
-        (document.getElementById('txtUsername') as HTMLInputElement).value = "";
-        (document.getElementById('txtPassword') as HTMLInputElement).value = "";
-        setCurrentProgram(0);
     }
 
 
+
+    function SelectAccount(acc: ProgramAccountObject){
+        rightModal.Open(AccountDetail({
+            programData: ProgramData,
+            programAccount: acc,
+            closeAction: () => rightModal.Close(),
+            messageShow: (title: string, message: string) => iPrompt.MessageBoxShow(title, message)
+        }));
+    }
 
     function NewAccount(){
-
+        rightModal.Open(AccountDetail({
+            programData: ProgramData,
+            programAccount: undefined,
+            closeAction: () => rightModal.Close(),
+            messageShow: (title: string, message: string) => iPrompt.MessageBoxShow(title, message)
+        }));
     }
+
+
+
 
 
     const columns: GridColDef[] = [
@@ -113,14 +96,11 @@ export default function SiteAccounts() {
         { field: 'email', headerName: 'E-Posta', flex: 1},
         { field: 'run_count', headerName: 'Çalışma Sayısı', flex: 1},
         { field: 'detail', headerName: 'Detay', flex: 1, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
-                return <button type="button" className="btn btn-sm btn-primary py-1" onClick={() => SelectUser(params.row)}>Detay</button>;
+                return <button type="button" className="btn btn-sm btn-primary py-1" onClick={() => SelectAccount(params.row)}>Detay</button>;
             }
         },
-        { field: 'delete', headerName: 'Kayıt Sil', flex: 1, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
-                if(params.row?.status == AppointmentStatusEnum.New || params.row?.status == AppointmentStatusEnum.InQueue)
-                    return <button type="button" className="btn btn-sm btn-soft-danger py-1" onClick={() => DeleteUserRequest(parseInt(params.row?.key ?? "0"))}>Hesap Sil</button>;
-                else
-                    return <></>
+        { field: 'delete', headerName: 'Hesap Sil', flex: 1, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
+                return <button type="button" className="btn btn-sm btn-soft-danger py-1" onClick={() => DeleteUserRequest(parseInt(params.row?.key ?? "0"))}>Hesap Sil</button>;
             }
         },
     ];
@@ -131,16 +111,16 @@ export default function SiteAccounts() {
 
     return (<>
             <Head>
-                <title>Hedef Site Hesapları - Visa Appointment Engine</title>
+                <title>Program Hesapları - Visa Appointment Engine</title>
             </Head>
 
             <div className="m-3">
                 <div className="row">
                     <div className="col-6">
-                        <h3>Hedef Site Hesapları</h3>
+                        <h3>Program Hesapları</h3>
                     </div>
                     <div className="col-6">
-                        <button className="btn btn-danger float-right mb-2 mx-3" type="button" onClick={() => NewAccount()}>Yeni Kayıt</button>
+                        <button className="btn btn-danger float-right mb-2 mx-3" type="button" onClick={() => NewAccount()}>Yeni Hesap</button>
                     </div>
                 </div>
                 <br></br>
@@ -150,7 +130,7 @@ export default function SiteAccounts() {
                     <div className="col-12">
 
                         <div style={{height: 700, width: '100%'}}>
-                            <DataGridComponent filterText="Kullanıcı adı veya mail adresi" api={'/admin/siteaccount/dataservice'}
+                            <DataGridComponent filterText="Kullanıcı adı veya mail adresi" api={'/admin/programaccount/dataservice'}
                                                columns={columns} isRedis={true}
                                                customFilterModel={CustomFilter1}
                                                customFilterModel2={CustomFilter2}

@@ -16,7 +16,6 @@ const links = [
     { key: 'pg6', name: 'Ayarlar', href: '#', route: '/panel/settings',
         children: [
 
-            { key: 'pg64', name: 'Site Hesapları', href: '/panel/settings/siteaccounts', icon: 'mdi mdi-account-circle' },
             { key: 'pg61', name: 'Genel Ayarları', href: '/panel/settings/general', icon: 'mdi mdi-settings' },
             { key: 'pg62', name: 'Proxy Ayarları', href: '/panel/settings/proxy', icon: 'mdi mdi-shape-outline' },
             { key: 'pg63', name: 'Live Logs', href: '/panel/settings/livelogs', icon: 'mdi mdi-monitor-dashboard' }
@@ -28,6 +27,7 @@ const links = [
 
             { key: 'pg64', name: 'Program Tanımları', href: '/panel/program/programs', icon: 'mdi mdi-developer-board' },
             { key: 'pg64', name: 'Program Geliştirme', href: '/panel/program/development', icon: 'mdi mdi-codepen' },
+            { key: 'pg64', name: 'Program Hesapları', href: '/panel/program/accounts', icon: 'mdi mdi-account-circle' },
         ]
     },
 ];

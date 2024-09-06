@@ -13,6 +13,7 @@ import DataGridComponent from "@/components/DataGrid/DataGridComponent";
 import {EnumObject} from "@/objects/enum.object";
 import {AppointmentObject} from "@/objects/appointment.object";
 import { PriorityEnum } from "@/enums/priority.enum";
+import {ProgramObject} from "@/objects/program.object";
 
 let CurrentKey: number;
 let CurrentConfirmAction: (isOkay: boolean) => Promise<void>;
@@ -30,8 +31,8 @@ export default function List(){
     const [CustomFilter3, setCustomFilter3] = React.useState<GridCustomFilterModel>();
     const [CustomFilter4, setCustomFilter4] = React.useState<GridCustomFilterModel>();
 
-    const [CountryData, setCountryData] = useState<EnumObject[]>([]);
-    const [CurrentCountry, setCurrentCountry] = useState<number>(-1);
+    const [ProgramData, setProgramData] = useState<ProgramObject[]>([]);
+    const [CurrentProgram, setCurrentProgram] = useState<number>(-1);
 
     const [StatusData, setStatusData] = useState<EnumObject[]>([]);
     const [CurrentStatus, setCurrentStatus] = useState<number>(-1);
@@ -41,22 +42,24 @@ export default function List(){
 
     const [CurrentType, setCurrentType] = useState<number>(-1);
 
+    const [IsLoading, setIsLoading] = useState<boolean>(false);
+
 
     useEffect(() => {
-        GetCounties();
+        GetPrograms();
         GetStatuses();
         GetPriorities();
     }, []);
 
 
 
-    async function GetCounties(){
-        const resp = await ApiGet('/admin/appointment/countries');
+    async function GetPrograms(){
+        const resp = await ApiGet('/admin/program/list');
         if (!resp.success) {
             iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
             return;
         }
-        setCountryData(resp.data);
+        setProgramData(resp.data);
         CountryDataList = resp.data;
     }
 
@@ -80,12 +83,24 @@ export default function List(){
         PriorityDataList = resp.data;
     }
 
+    async function GetProgram(programKey: number){
+        setIsLoading(true);
+        const resp = await ApiGet(`/admin/program/scraper/${programKey}`);
+        setIsLoading(false);
+        if (!resp.success) {
+            iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
+            return;
+        }
 
+        return JSON.parse(resp.data)
+    }
 
     async function SelectAppointment(item: AppointmentObject) {
+
         rightModal.Open(Detail({
             appointment: item,
-            countryData: CountryDataList,
+            scraper: await GetProgram(item.program),
+            programData: ProgramData,
             statusData: StatusDataList,
             priorityData: PriorityDataList,
             closeAction: (isRefresh) => {
@@ -143,12 +158,12 @@ export default function List(){
 
 
 
-    function SelectCountry(item: number){
-        setCurrentCountry(item);
+    function SelectProgram(item: number){
+        setCurrentProgram(item);
         if(item > -1)
             setCustomFilter1({
                 RunKey: Date.now().toString(),
-                FieldName: "country",
+                FieldName: "program",
                 FilterValue: item,
                 IsString: true
             });
@@ -294,10 +309,10 @@ export default function List(){
             <div className="row">
                 <div className="col-6">
                     <div className="form-group">
-                        <label className="text-black" style={{fontSize: "1rem"}}>Başvuru Ülkesi</label>
-                        <select name="country" style={{color: '#000000'}} className="form-select form-control" value={CurrentCountry} onChange={(e) => SelectCountry(parseInt(e.target.value ?? "-1"))}>
+                        <label className="text-black" style={{fontSize: "1rem"}}>Program</label>
+                        <select name="program" style={{color: '#000000'}} className="form-select form-control" value={CurrentProgram} onChange={(e) => SelectProgram(parseInt(e.target.value ?? "-1"))}>
                             <option value="-1">Tümü</option>
-                            {(CountryData?.length || 0) <= 0 ? (<></>) : CountryData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key}>{t.code}</option>)}
+                            {(ProgramData?.length || 0) <= 0 ? (<></>) : ProgramData.map(t => <option key={t.key} id={`program_${t.key}`} value={t.key}>{t.name}</option>)}
                         </select>
                     </div>
                 </div>

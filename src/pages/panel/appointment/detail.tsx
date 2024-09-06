@@ -4,20 +4,16 @@ import {AppointmentObject} from "@/objects/appointment.object";
 import {EnumObject} from "@/objects/enum.object";
 import {CountryStepsInterface} from "@/interfaces/countrySteps.interface";
 import {CountryEnum} from "@/enums/country.enum";
-import {CzechiaForm} from "@/countryForms/czechia.form";
-import {EstoniaForm} from "@/countryForms/estonia.form";
-import {FranceForm} from "@/countryForms/france.form";
-import {NetherlandsForm} from "@/countryForms/netherlands.form";
-import {ItalyForm} from "@/countryForms/italy.form";
-import {BulgariaForm} from "@/countryForms/bulgaria.form";
 import FormRenderer from "@/pages/panel/appointment/formRenderer";
 import {FormSerializerControl} from "@/core/webrequest/controls/formSerializer.control";
 import {AppointmentStatusEnum} from "@/enums/appointmentStatus.enum";
+import {ProgramObject} from "@/objects/program.object";
 
 
 interface DetailProps{
     appointment: AppointmentObject;
-    countryData: EnumObject[],
+    programData: ProgramObject[],
+    scraper: any,
     statusData: EnumObject[],
     priorityData: EnumObject[],
     closeAction: (isRefresh: boolean) => void,
@@ -26,52 +22,18 @@ interface DetailProps{
 
 const Detail = (props: DetailProps) => {
     const app:AppointmentObject = props.appointment;
-    const CountryData = props.countryData;
+    const scraper = props.scraper;
+    const ProgramData = props.programData;
     const PriorityData = props.priorityData;
     const StatusData = props.statusData;
-    const CurrentCountry = app.country;
-
-
-
-
-    function CountryForm(props: {CurrentCountry: number}){
-        let steps: CountryStepsInterface|undefined = undefined;
-
-        switch (props.CurrentCountry){
-            case CountryEnum.CzechRepublic: steps = new CzechiaForm(); break;
-            case CountryEnum.Estonia: steps = new EstoniaForm(); break;
-            case CountryEnum.France: steps = new FranceForm(); break;
-            case CountryEnum.Netherlands: steps = new NetherlandsForm(); break;
-            case CountryEnum.Italy: steps = new ItalyForm(); break;
-            case CountryEnum.Bulgaria: steps = new BulgariaForm(); break;
-        }
-
-        if(steps != undefined)
-            return (<FormRenderer Steps={steps.Steps} FormSave={Save} Dataset={app.dataset}/>);
-        else
-            return (<></>);
-    }
-
-    function VisaForm(CurrentCountry: number){
-        switch (CurrentCountry){
-            case CountryEnum.CzechRepublic: return new CzechiaForm();
-            case CountryEnum.Estonia: return new EstoniaForm();
-            case CountryEnum.France: return  new FranceForm();
-            case CountryEnum.Netherlands: return new NetherlandsForm();
-            case CountryEnum.Italy: return new ItalyForm();
-            case CountryEnum.Bulgaria: return new BulgariaForm();
-        }
-    }
 
 
     const Save = async (formData: Record<string, any>) => {
 
-        let steps: CountryStepsInterface|undefined = VisaForm(CurrentCountry);
-
         formData = {
             ...formData,
             ...FormSerializerControl("AppointmentDetailForm"),
-            visa_form: steps?.Steps
+            scraper: scraper
         }
 
         const saveReq = await ApiPost('/admin/appointment/save', formData);
@@ -110,9 +72,9 @@ const Detail = (props: DetailProps) => {
 
                 <div className="col-6">
                     <div className="form-group">
-                        <label className="h6">Başvuru Ülkesi</label>
+                        <label className="h6">Program</label>
                         <select name="country" disabled={true} style={{color: '#000000'}} className="form-select form-control">
-                            {(CountryData?.length || 0) <= 0 ? (<></>) : CountryData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key} selected={app.country == t.key}>{t.code}</option>)}
+                            {(ProgramData?.length || 0) <= 0 ? (<></>) : ProgramData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key} selected={app.program == t.key}>{t.name}</option>)}
                         </select>
                     </div>
                 </div>
@@ -154,7 +116,7 @@ const Detail = (props: DetailProps) => {
             </div>
         </div>
 
-        <CountryForm CurrentCountry={CurrentCountry}/>
+        <FormRenderer Steps={scraper} FormSave={Save} Dataset={app.dataset}/>
 
         <div className="row mt-5">
             <div className="col-12">

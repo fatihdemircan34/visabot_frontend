@@ -3,23 +3,30 @@ import {VisaFormField, VisaForm} from "@/controls/visaForm";
 
 const FormRenderer = (props: {Steps: any, FormSave:(formData: Record<string, any>) => Promise<void>, Dataset?: any}) => {
 
-    const Steps = props.Steps;
-    let currentData = {}
-    if(props.Dataset != undefined){
-        const dataset = JSON.parse(props.Dataset)
-        VisaForm.fromJSON(Steps).steps?.map(c => {
-            c.content?.map(t => {
-                currentData = {
-                    ...currentData,
-                    [t.name]: dataset[t.name as string],
-                }
-            });
-        });
-    }
+    console.log(`Steps >>> ${JSON.stringify(props.Steps)}`);
 
+    let Steps = undefined;
+    let currentData = {}
+    if(props.Steps != undefined){
+        Steps = props.Steps.filter((item:any) => item.data_step == 1);
+        if(props.Dataset != undefined){
+            const dataset = JSON.parse(props.Dataset)
+            VisaForm.fromJSON(Steps).steps?.map(c => {
+                c.content?.map(t => {
+                    currentData = {
+                        ...currentData,
+                        [t.name]: dataset[t.name as string],
+                    }
+                });
+            });
+        }
+    }
 
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState<Record<string, any>>(currentData);
+
+    if(Steps == undefined)
+        return (<>Program scraper bulunamadı!</>);
 
     const handleNext = () => {
         if (currentStep < Steps.length) {

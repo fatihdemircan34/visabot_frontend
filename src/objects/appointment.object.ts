@@ -9,8 +9,8 @@ export interface AppointmentObject {
     contactNumber: string;
     email: string;
     is_vip: boolean;
-    country: CountryEnum;
-    country_name: string;
+    program: CountryEnum;
+    program_name: string;
     dataset: string;
     status: AppointmentStatusEnum;
     priority: number|undefined;

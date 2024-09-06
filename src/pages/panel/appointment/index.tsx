@@ -8,13 +8,8 @@ import {EnumObject} from "@/objects/enum.object";
 import {CountryEnum} from "@/enums/country.enum";
 import FormRenderer from "@/pages/panel/appointment/formRenderer";
 import {CountryStepsInterface} from "@/interfaces/countrySteps.interface";
-import {CzechiaForm} from "@/countryForms/czechia.form";
-import {ItalyForm} from "@/countryForms/italy.form";
-import {NetherlandsForm} from "@/countryForms/netherlands.form";
-import {BulgariaForm} from "@/countryForms/bulgaria.form";
-import {EstoniaForm} from "@/countryForms/estonia.form";
-import {FranceForm} from "@/countryForms/france.form";
 import {FormSerializerControl} from "@/core/webrequest/controls/formSerializer.control";
+import {ProgramObject} from "@/objects/program.object";
 
 
 
@@ -22,27 +17,31 @@ export default function AppointmentIndex(){
 
     const iPrompt = Prompt();
 
-    const [CountryData, setCountryData] = useState<EnumObject[]>([]);
-    const [CurrentCountry, setCurrentCountry] = useState<number>(0);
+    const [ProgramData, setProgramData] = useState<ProgramObject[]>([]);
+    const [CurrentProgram, setCurrentProgram] = useState<number>(0);
 
     const [PriorityData, setPriorityData] = useState<EnumObject[]>([]);
     const [CurrentPriority, setCurrentPriority] = useState<number>(0);
 
+    const [IsLoading, setIsLoading] = useState<boolean>(false);
+
+    const [Scraper, setScraper] = useState<any>();
+
 
     useEffect(() => {
-        GetCounties();
+        GetPrograms();
         GetPriorities();
     }, []);
 
 
 
-    async function GetCounties(){
-        const resp = await ApiGet('/admin/appointment/countries');
+    async function GetPrograms(){
+        const resp = await ApiGet('/admin/program/list');
         if (!resp.success) {
             iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
             return;
         }
-        setCountryData(resp.data);
+        setProgramData(resp.data);
     }
 
     async function GetPriorities(){
@@ -54,38 +53,27 @@ export default function AppointmentIndex(){
         setPriorityData(resp.data);
     }
 
-    function CountryForm(props: {CurrentCountry: number}){
-        let steps: CountryStepsInterface|undefined = VisaForm(CurrentCountry);
-
-        if(steps != undefined)
-            return (<FormRenderer Steps={steps.Steps} FormSave={Save}/>);
-        else
-            return (<></>);
-    }
-
-
-    function VisaForm(CurrentCountry: number){
-        switch (CurrentCountry){
-            case CountryEnum.CzechRepublic: return new CzechiaForm();
-            case CountryEnum.Estonia: return new EstoniaForm();
-            case CountryEnum.France: return  new FranceForm();
-            case CountryEnum.Netherlands: return new NetherlandsForm();
-            case CountryEnum.Italy: return new ItalyForm();
-            case CountryEnum.Bulgaria: return new BulgariaForm();
+    async function SetProgram(programKey: number){
+        setIsLoading(true);
+        const resp = await ApiGet(`/admin/program/scraper/${programKey}`);
+        setIsLoading(false);
+        if (!resp.success) {
+            iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
+            return;
         }
-    }
 
+        setCurrentProgram(programKey);
+        setScraper(JSON.parse(resp.data));
+    }
 
 
 
     const Save = async (formData: Record<string, any>) => {
 
-        let steps: CountryStepsInterface|undefined = VisaForm(CurrentCountry);
-
         formData = {
             ...formData,
             ...FormSerializerControl("AppointmentForm"),
-            visa_form: steps?.Steps
+            visa_form: Scraper
         }
 
         const saveReq = await ApiPost('/admin/appointment/save', formData);
@@ -95,7 +83,7 @@ export default function AppointmentIndex(){
         }
 
         iPrompt.MessageBoxShow("Başarılı", "Randevu başarılı bir şekilde oluşturuldu!");
-        setCurrentCountry(0);
+        setCurrentProgram(0);
     }
 
 
@@ -132,10 +120,10 @@ export default function AppointmentIndex(){
 
                     <div className="col-4">
                         <div className="form-group">
-                            <h5>Başvuru Ülkesi</h5>
-                            <select name="country" style={{color: '#000000'}} className="form-select form-control" value={CurrentCountry} onChange={(e) => setCurrentCountry(Number(e.target.value))}>
+                            <h5>Program</h5>
+                            <select name="country" style={{color: '#000000'}} className="form-select form-control" value={CurrentProgram} onChange={(e) => SetProgram(Number(e.target.value))}>
                                 <option key="0" id={`country_0`} value="0" selected={true} disabled={true}>Başlamak için lütfen ülke seçiniz!</option>
-                                {(CountryData?.length || 0) <= 0 ? (<></>) : CountryData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key}>{t.code}</option>)}
+                                {(ProgramData?.length || 0) <= 0 ? (<></>) : ProgramData.map(t => <option key={t.key} id={`country_${t.key}`} value={t.key}>{t.name}</option>)}
                             </select>
                         </div>
                     </div>
@@ -167,7 +155,7 @@ export default function AppointmentIndex(){
                 </div>
             </div>
 
-            <CountryForm CurrentCountry={CurrentCountry}/>
+            { IsLoading ? <>Loading...</> : (<FormRenderer Steps={Scraper} FormSave={Save}/>) }
 
         </div>
 

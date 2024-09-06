@@ -11,9 +11,10 @@ import RightModal from "@/controls/rightModal";
 import {EnumObject} from "@/objects/enum.object";
 import Detail from "@/pages/panel/appointment/detail";
 import {StatisticsObject} from "@/objects/statistics.object";
+import {ProgramObject} from "@/objects/program.object";
 
 
-let CountryDataList: EnumObject[] = [];
+let ProgramDataList: ProgramObject[] = [];
 let StatusDataList: EnumObject[] = [];
 let PriorityDataList: EnumObject[] = [];
 let CurrentDateTime: Date|undefined = undefined ;
@@ -38,7 +39,7 @@ export default function AdminDashboard(): ReturnType<FC> {
     useEffect(() => {
         GetStatistics();
         GetDailyAppointments(new Date());
-        GetCounties();
+        GetPrograms();
         GetStatuses();
         GetPriorities();
     }, []);
@@ -72,13 +73,13 @@ export default function AdminDashboard(): ReturnType<FC> {
     }
 
 
-    async function GetCounties(){
-        const resp = await ApiGet('/admin/appointment/countries');
+    async function GetPrograms(){
+        const resp = await ApiGet('/admin/program/list');
         if (!resp.success) {
             iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
             return;
         }
-        CountryDataList = resp.data;
+        ProgramDataList = resp.data;
     }
 
     async function GetStatuses(){
@@ -99,13 +100,24 @@ export default function AdminDashboard(): ReturnType<FC> {
         PriorityDataList = resp.data;
     }
 
+    async function GetProgram(programKey: number){
+
+        const resp = await ApiGet(`/admin/program/scraper/${programKey}`);
+        if (!resp.success) {
+            iPrompt.MessageBoxShow("Hata", resp.message || "Bilinmeyen bir hata oluştu!");
+            return;
+        }
+
+        return JSON.parse(resp.data)
+    }
 
 
 
-    function SelectAppointment(item: AppointmentObject){
+    async function SelectAppointment(item: AppointmentObject){
         rightModal.Open(Detail({
             appointment: item,
-            countryData: CountryDataList,
+            scraper: await GetProgram(item.program),
+            programData: ProgramDataList,
             statusData: StatusDataList,
             priorityData: PriorityDataList,
             closeAction: (isRefresh) => {
@@ -127,6 +139,7 @@ export default function AdminDashboard(): ReturnType<FC> {
         return (<>
             <tr key={item.key}>
                 <td>{item.key}</td>
+                <td>{item.program_name}</td>
                 <td>{item.firstName}</td>
                 <td>{item.lastName}</td>
                 <td>{item.contactNumber}</td>
@@ -165,6 +178,9 @@ export default function AdminDashboard(): ReturnType<FC> {
                                     İşlem No
                                 </th>
                                 <th>
+                                    Program
+                                </th>
+                                <th>
                                     İsim
                                 </th>
                                 <th>
@@ -186,7 +202,7 @@ export default function AdminDashboard(): ReturnType<FC> {
                             </thead>
                             <tbody>
                             {(AppointmentData !== null && AppointmentData.length || 0) <= 0 ? (<tr>
-                                <td className="text-center" colSpan={7}>Seçilen tarih için randevu alınmamış.</td>
+                                <td className="text-center" colSpan={8}>Seçilen tarih için randevu alınmamış.</td>
                             </tr>) : AppointmentData.map(t => AppointmentItem(t))}
                             </tbody>
                         </table>
