@@ -14,7 +14,7 @@ import {ProgramObject} from "@/objects/program.object";
 import AccountDetail from "@/pages/panel/program/accountDetail";
 
 
-let DeleteCountryKey: number;
+let DeleteProgramKey: number;
 
 
 export default function Accounts() {
@@ -49,14 +49,14 @@ export default function Accounts() {
 
 
     function DeleteUserRequest(country: number) {
-        DeleteCountryKey = country;
+        DeleteProgramKey = country;
         iPrompt.ConfirmBoxShow("Kullanıcı Silme", "Kullanıcı bilgisi sistemden silinecektir. Onaylıyor musunuz?");
     }
 
     const DeleteUser = async (isOkay: boolean) => {
         if (!isOkay) return;
 
-        const deleteReq = await ApiPost('/admin/programaccount/delete', { country: DeleteCountryKey });
+        const deleteReq = await ApiPost('/admin/programaccount/delete', { key: DeleteProgramKey });
         if (!deleteReq.success) {
             iPrompt.MessageBoxShow("Hata", deleteReq.message || "Bilinmeyen bir hata oluştu!");
             return;
@@ -95,11 +95,11 @@ export default function Accounts() {
         { field: 'password', headerName: 'Şifresi', flex: 1},
         { field: 'email', headerName: 'E-Posta', flex: 1},
         { field: 'run_count', headerName: 'Çalışma Sayısı', flex: 1},
-        { field: 'detail', headerName: 'Detay', flex: 1, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
+        { field: 'detail', headerName: 'Detay', width: 100, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
                 return <button type="button" className="btn btn-sm btn-primary py-1" onClick={() => SelectAccount(params.row)}>Detay</button>;
             }
         },
-        { field: 'delete', headerName: 'Hesap Sil', flex: 1, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
+        { field: 'delete', headerName: 'Hesap Sil', width: 120, sortable: false, editable: false, renderCell: (params: GridRenderCellParams<any, number>) => {
                 return <button type="button" className="btn btn-sm btn-soft-danger py-1" onClick={() => DeleteUserRequest(parseInt(params.row?.key ?? "0"))}>Hesap Sil</button>;
             }
         },
