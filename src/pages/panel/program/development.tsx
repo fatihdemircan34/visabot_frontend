@@ -31,6 +31,15 @@ const Development: React.FC = () => {
         GetPrograms();
 
 
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+                event.preventDefault();
+                SaveCode();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
         const handleBeforeUnload = (event: any) => {
             if (IsChanged) {
                 event.preventDefault();
@@ -42,8 +51,9 @@ const Development: React.FC = () => {
 
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
+            window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [IsChanged]);
+    }, [IsChanged, SaveCode]);
 
     async function GetPrograms(){
         const resp = await ApiGet('/admin/program/list');

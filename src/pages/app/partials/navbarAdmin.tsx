@@ -13,23 +13,23 @@ const links = [
 
     { key: 'pg4', name: 'Randevu Listesi', href: '/panel/appointment/list', route: null },
 
+    { key: 'pg7', name: 'Program', href: '#', route: '/panel/program',
+        children: [
+
+            { key: 'pg64', name: 'Program Tanımları', href: '/panel/program/programs', icon: 'mdi mdi-developer-board' },
+            { key: 'pg65', name: 'Program Geliştirme', href: '/panel/program/development', icon: 'mdi mdi-codepen' },
+            { key: 'pg66', name: 'Program Hesapları', href: '/panel/program/accounts', icon: 'mdi mdi-account-circle' },
+            { key: 'pg67', name: 'Live Logs', href: '/panel/program/livelogs', icon: 'mdi mdi-monitor-dashboard' }
+        ]
+    },
+
     { key: 'pg6', name: 'Ayarlar', href: '#', route: '/panel/settings',
         children: [
 
             { key: 'pg61', name: 'Genel Ayarları', href: '/panel/settings/general', icon: 'mdi mdi-settings' },
             { key: 'pg62', name: 'Proxy Ayarları', href: '/panel/settings/proxy', icon: 'mdi mdi-shape-outline' },
-            { key: 'pg63', name: 'Live Logs', href: '/panel/settings/livelogs', icon: 'mdi mdi-monitor-dashboard' }
         ]
-    },
-
-    { key: 'pg7', name: 'Programlama', href: '#', route: '/panel/program',
-        children: [
-
-            { key: 'pg64', name: 'Program Tanımları', href: '/panel/program/programs', icon: 'mdi mdi-developer-board' },
-            { key: 'pg64', name: 'Program Geliştirme', href: '/panel/program/development', icon: 'mdi mdi-codepen' },
-            { key: 'pg64', name: 'Program Hesapları', href: '/panel/program/accounts', icon: 'mdi mdi-account-circle' },
-        ]
-    },
+    }
 ];
 
 
